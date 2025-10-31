@@ -1,0 +1,268 @@
+/*
+Theme Name: Shazaam Child Theme
+Theme URI: http://streamlinevrs.com/
+Description: Child theme for customizations to Global Streamline Parent Theme
+Author: Rusu
+Author URI: http://streamlinevrs.com
+Template: Global-Streamline-Parent-theme
+Version: 1.0
+
+Copyright 2017 Streamline VRS
+*/
+
+/*Make your custom css edits here*/
+#slider:before {
+position:absolute;
+display:block;
+left:0;
+right:0;
+top:0;
+bottom:0;
+z-index:1;
+content:'';
+/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#000000+0,000000+37&0.65+1,0+37 */
+background: -moz-linear-gradient(top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.65) 1%, rgba(0,0,0,0) 37%); /* FF3.6-15 */
+background: -webkit-linear-gradient(top, rgba(0,0,0,0.65) 0%,rgba(0,0,0,0.65) 1%,rgba(0,0,0,0) 37%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom, rgba(0,0,0,0.65) 0%,rgba(0,0,0,0.65) 1%,rgba(0,0,0,0) 37%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6000000', endColorstr='#00000000',GradientType=0 ); /* IE6-9 */
+
+}
+.breadcrumb:not(.breadcrumb--light) {
+    background-color: #f7f7f7 !important;
+}
+.breadcrumb:not(.breadcrumb--light) a {
+    color: #333 !important;
+}
+
+
+/** General **/
+.c-filter-widget .form-control[readonly] {
+    background-color: #fff;
+}
+
+.c-property__cta-btn--inquiry:focus {
+    color: #fff;
+}
+
+.breadcrumb:not(.breadcrumb--light) a {
+  color: #fff;
+}
+
+
+/** Property **/
+.c-property__fav-btn .fa-heart-o {
+    text-shadow: 0 0 2px rgba(0,0,0,.75);
+}
+
+.c-property__pet-icon {
+    text-shadow: 0 2px 2px #232323;
+}
+
+
+/*force map height to full height*/
+.map-search.ng-pristine.ng-untouched.ng-valid.ng-not-empty,
+map.map-canvas {
+    height: 100vh !important;
+}
+
+/* fix update pligin 2.7.8 */
+button.btn.primary-button.btn-block {
+    max-height: 34px;
+}
+/* .home input[type=text],  */
+.home select {
+	border: 0px solid #ccc;
+}
+/** Side Info template styles  - to be removed after plugin update **/
+.c-property--side-info .c-property__heading {
+    font-size: 20px; }
+    @media (min-width: 75em) {
+      .c-property--side-info .c-property__heading {
+        font-size: 24px; } }
+  .c-property--side-info .c-property__location {
+    font-size: 1.1em; }
+    @media (min-width: 75em) {
+      .c-property--side-info .c-property__location {
+        font-size: 1.25em; } }
+  .c-property--side-info .c-property__img {
+    margin-bottom: 15px; }
+  .c-property--side-info .c-property__body {
+    padding: 0; }
+  .c-property--side-info .c-property__fav-btn {
+    font-size: 1.4em;
+    left: auto;
+    margin-left: 20px;
+    position: relative;
+    top: auto; }
+  .c-property--side-info .c-property__cost {
+    margin-bottom: 5px; }
+  .c-property--side-info .c-property__cost-sum {
+    font-size: 20px; }
+
+
+  /** Styles for datepickers icons - can be removed after plugin update **/
+    .date-group .form-control {
+      padding-right: 35px; 
+  }
+  .date-group .glyphicon-calendar {
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      pointer-events: none;
+      transform: translateY(-50%); 
+  }
+#ui-datepicker-div {
+    z-index: 10000!important;
+}
+
+#resortpro-book-unit .col-md-12.ng-scope {
+    float: left;
+}
+@media all and (max-width:500px) {
+    #black_bar a {
+        font-size: 14px;
+    }
+}
+
+.siw-image-filter-dark.siw-slide-up h4 {
+    font-weight: 500!important;
+    text-shadow: 2px 0 #000;
+}
+
+.home .c-page-header{
+  background-color: rgba(0,0,0,.2);
+}
+
+.c-nav-menu .c-nav-menu__inner > .menu-item > a{
+  font-weight: bold;
+}
+
+#contentarea{
+  min-height: 70vh;
+}
+#footer .col-lg-4.col-xs-4{
+  padding-left: 0;
+}
+
+#footer .col-lg-8.col-xs-8{
+  padding-right: 0;
+}
+
+.c-property--listing-1 .c-property__cost {
+    font-weight: 500;
+    text-align: center;
+}
+
+.c-property__heading>a {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.c-property__header{
+  height: 105px;
+}
+
+.resortpro-reservation-details-mobile{
+  position: relative!important;
+}
+
+@media only screen and (max-width: 767px){
+  .c-hero__search{
+    bottom: 5%;
+  }
+}
+#resortpro-book-unit {
+	padding-top:0;
+}
+.with_frm_style .cst-form {
+    width: 50%;
+    float: left;
+    clear: none;
+    display: inline-block;
+}
+
+div#frm_field_105_container {
+    padding-right: 25px;
+}
+#cst-form {
+    padding: 30px;
+    border: 1px solid #333;
+    margin-top: 50px;
+}
+
+#modalPrivacy table{
+	table-layout:fixed;
+    width:100%;
+}
+
+
+  /** ############## Greg's custom styles ############### **/
+
+p.search-pagination, p.c-search-pagination__text {
+	display: none;
+}
+.slash_logic .ui-datepicker-unselectable span.ui-state-default {
+	background-color: #eeeeee;
+}
+.h1, .h2, .h3, h1, h2, h3 {
+	margin-bottom: 20px !important;
+}
+#contentarea h1.entry-title {
+	margin-top: 20px !important;
+	font-size:2em;
+}
+.c-property__heading {
+	margin-bottom: 0px !important;
+}
+.secondary_page_sidebar .search_widget .row:nth-child(3) {
+	border:none !important;
+}
+/**.row {
+	margin: 0 !important;
+} **/
+.c-property.c-property--listing-1.row {
+	margin: 15px -15px !important;
+}
+.c-review.row.ng-scope {
+	margin-top: 20px !important;
+}
+p, ol, ul {
+	margin: 0 0 20px 0 !important;
+}
+body {
+	font-family: /** "Helvetica Neue",Helvetica,Arial,sans-serif; **/ Arial,Helvetica,sans-serif;
+}
+.c-nav-menu .c-nav-menu__inner > .menu-item > a {
+	font-weight: normal;
+}
+.c-details-list--sidebar .c-details-list__item {
+	font-size:1em;
+}
+
+
+#resortpro_unit_submit {
+	background-color: #b3503e;
+}
+.c-sidebar .c-book-form__submit-btn {
+	border: none;
+}
+.c-sidebar .btn-primary {
+	background-color: #dddddd !important;
+	border: none !important;
+	color: #333333;
+}
+
+@media (max-width: 992px) {
+	.col-xs-1 {
+	width: 50%;
+	}}
+
+/* Remove the price tooltips from the datepicker */
+.tooltipster-base .tooltipster-content, .tooltipster-arrow , .tooltispter-default {
+	display:none;
+}
+
+.layout-1 iframe{
+	width:100%;
+}
+

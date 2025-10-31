@@ -1,0 +1,1482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Second Home - Brand Guidelines</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: 300;
+            font-size: 16px;
+            line-height: 1.75;
+            color: #333;
+            background-color: #fff;
+        }
+
+        /* Layout */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section {
+            padding: 50px 0;
+        }
+
+        .section--gray {
+            background-color: #f7f7f7;
+        }
+
+        .section--dark {
+            background-color: #333;
+            color: #fff;
+        }
+
+        /* Hero */
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><rect fill="%23333" width="1200" height="600"/><polygon fill="%23444" points="0,600 400,200 800,400 1200,100 1200,600"/><polygon fill="%23555" points="0,600 300,300 600,450 900,250 1200,350 1200,600"/></svg>');
+            background-size: cover;
+            background-position: center;
+            padding: 60px 0 80px 0;
+            text-align: center;
+            color: #fff;
+        }
+
+        .hero-logo {
+            max-width: 500px;
+            width: 100%;
+            height: auto;
+            filter: brightness(0) invert(1);
+            margin-bottom: 40px;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 300;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Headings */
+        h1 {
+            font-weight: 300;
+        }
+
+        h2 {
+            font-size: 40px;
+            margin-bottom: 25px;
+            text-align: center;
+            color: #b3503e;
+            font-weight: 700;
+        }
+
+        h2:after {
+            content: "";
+            display: block;
+            width: 100px;
+            height: 3px;
+            background-color: #b3503e;
+            margin: 20px auto;
+        }
+
+        h3 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #b3503e;
+            font-weight: 700;
+        }
+
+        h4 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        p {
+            margin-bottom: 20px;
+        }
+
+        /* Grid System */
+        .grid {
+            display: grid;
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+
+        .grid-4 {
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+
+        /* Color Swatches */
+        .color-swatch {
+            background: #fff;
+            border-radius: 0;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .color-preview {
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 700;
+            font-size: 18px;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+
+        .color-info {
+            padding: 20px;
+            background: #fff;
+        }
+
+        .color-name {
+            font-weight: 700;
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .color-values {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .color-usage {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #999;
+            font-style: italic;
+        }
+
+        /* Typography Samples */
+        .type-sample {
+            background: #fff;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+
+        .type-display {
+            margin-bottom: 10px;
+        }
+
+        .type-details {
+            font-size: 14px;
+            color: #999;
+            font-family: 'Courier New', monospace;
+        }
+
+        .font-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .font-sample {
+            background: #fff;
+            padding: 30px;
+            border: 2px solid #ccc;
+        }
+
+        .font-sample.current {
+            border-color: #00BF8F;
+            position: relative;
+        }
+
+        .font-sample.current:before {
+            content: "CURRENT";
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: #00BF8F;
+            color: #fff;
+            padding: 4px 12px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .font-sample.alternative {
+            border-color: #b3503e;
+            position: relative;
+        }
+
+        .font-sample.alternative:before {
+            content: "ALTERNATIVE";
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: #b3503e;
+            color: #fff;
+            padding: 4px 12px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        /* Logo Usage */
+        .logo-example {
+            background: #fff;
+            padding: 40px;
+            text-align: center;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+        }
+
+        .logo-example--dark {
+            background: #333;
+        }
+
+        .logo-example img {
+            max-width: 300px;
+            height: auto;
+        }
+
+        .logo-example--dark img {
+            filter: brightness(0) invert(1);
+        }
+
+        /* Buttons */
+        .button {
+            display: inline-block;
+            padding: 12px 30px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 16px;
+            font-weight: 400;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 0;
+            width: auto;
+        }
+
+        .button-primary {
+            background-color: #00BF8F;
+            color: #fff;
+        }
+
+        .button-primary:hover {
+            background-color: #00a077;
+        }
+
+        .button-secondary {
+            background-color: #b3503e;
+            color: #fff;
+        }
+
+        .button-secondary:hover {
+            background-color: #9a4434;
+        }
+
+        .button-outline {
+            background-color: transparent;
+            color: #333;
+            border: 2px solid #333;
+        }
+
+        .button-outline:hover {
+            background-color: #333;
+            color: #fff;
+        }
+
+        /* Form Elements */
+        .form-example {
+            background: #fff;
+            padding: 30px;
+            max-width: 500px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 400;
+            color: #333;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ccc;
+            border-radius: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 16px;
+            background-color: #fff;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #00BF8F;
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: #ccc;
+        }
+
+        /* Spacing Examples */
+        .spacing-box {
+            background: #00BF8F;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .spacing-demo {
+            background: #f7f7f7;
+            padding: 20px;
+            border: 2px dashed #ccc;
+        }
+
+        /* Do/Don't Examples */
+        .do-dont-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .do-dont-card {
+            background: #fff;
+            padding: 30px;
+            border: 3px solid;
+        }
+
+        .do-card {
+            border-color: #00BF8F;
+        }
+
+        .dont-card {
+            border-color: #b3503e;
+        }
+
+        .do-dont-label {
+            font-weight: 700;
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .do-card .do-dont-label {
+            color: #00BF8F;
+        }
+
+        .dont-card .do-dont-label {
+            color: #b3503e;
+        }
+
+        .do-dont-card ul {
+            line-height: 2;
+            padding-left: 20px;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #000;
+            color: #999;
+            padding: 30px 0;
+            text-align: center;
+        }
+
+        .footer p {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        /* Alert Box */
+        .alert {
+            background: #f90;
+            color: #fff;
+            padding: 20px;
+            margin: 30px 0;
+        }
+
+        .alert strong {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            h2 {
+                font-size: 28px;
+            }
+
+            .hero-logo {
+                max-width: 250px;
+            }
+
+            .font-comparison {
+                grid-template-columns: 1fr;
+            }
+
+            .grid-4 {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+        }
+
+        /* Smooth Scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Utility Classes */
+        .text-center {
+            text-align: center;
+        }
+
+        .mt-40 {
+            margin-top: 40px;
+        }
+
+        .mb-20 {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero -->
+    <section class="hero">
+        <div class="container">
+            <img src="logo-charcoal-500.png" alt="Second Home Vacation Rentals" class="hero-logo">
+            <h1>Brand Guidelines</h1>
+            <p>Welcome to the Second Home Vacation Rentals brand guidelines. This document outlines our visual identity, design principles, and usage standards.</p>
+        </div>
+    </section>
+
+    <!-- Brand Overview -->
+    <section class="section">
+        <div class="container">
+            <h2>Brand Overview</h2>
+            <p class="text-center" style="max-width: 800px; margin: 0 auto;">Second Home Vacation Rentals provides professional vacation rental management in Colorado's Rocky Mountain region. Our brand reflects the natural beauty of the mountains, the warmth of a home away from home, and our commitment to exceptional service.</p>
+        </div>
+    </section>
+
+    <!-- Color Palette -->
+    <section id="colors" class="section section--gray">
+        <div class="container">
+            <h2>Color Palette</h2>
+
+            <h3 class="mt-40">Primary Colors</h3>
+            <div class="grid grid-2">
+                <div class="color-swatch">
+                    <div class="color-preview" style="background-color: #00BF8F;">Sage Green</div>
+                    <div class="color-info">
+                        <div class="color-name">Sage Green</div>
+                        <div class="color-values">
+                            HEX: #00BF8F<br>
+                            RGB: 0, 191, 143<br>
+                            Usage: Primary brand color
+                        </div>
+                        <div class="color-usage">Links, headings, CTAs, primary accents</div>
+                    </div>
+                </div>
+
+                <div class="color-swatch">
+                    <div class="color-preview" style="background-color: #b3503e;">Russet Red</div>
+                    <div class="color-info">
+                        <div class="color-name">Russet Red</div>
+                        <div class="color-values">
+                            HEX: #b3503e<br>
+                            RGB: 179, 80, 62<br>
+                            Usage: Secondary accent
+                        </div>
+                        <div class="color-usage">Secondary buttons, hover states, warm accents</div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="mt-40">Neutral Colors</h3>
+            <div class="grid grid-4">
+                <div class="color-swatch">
+                    <div class="color-preview" style="background-color: #333; color: #fff;">Charcoal</div>
+                    <div class="color-info">
+                        <div class="color-name">Charcoal</div>
+                        <div class="color-values">
+                            HEX: #333333<br>
+                            RGB: 51, 51, 51
+                        </div>
+                        <div class="color-usage">Headers, body text</div>
+                    </div>
+                </div>
+
+                <div class="color-swatch">
+                    <div class="color-preview" style="background-color: #232323; color: #fff;">Near Black</div>
+                    <div class="color-info">
+                        <div class="color-name">Near Black</div>
+                        <div class="color-values">
+                            HEX: #232323<br>
+                            RGB: 35, 35, 35
+                        </div>
+                        <div class="color-usage">Text shadows</div>
+                    </div>
+                </div>
+
+                <div class="color-swatch">
+                    <div class="color-preview" style="background-color: #000; color: #fff;">Black</div>
+                    <div class="color-info">
+                        <div class="color-name">Black</div>
+                        <div class="color-values">
+                            HEX: #000000<br>
+                            RGB: 0, 0, 0
+                        </div>
+                        <div class="color-usage">Footer, emphasis</div>
+                    </div>
+                </div>
+
+                <div class="color-swatch">
+                    <div class="color-preview" style="background-color: #fff; color: #333; border: 1px solid #ccc;">White</div>
+                    <div class="color-info">
+                        <div class="color-name">White</div>
+                        <div class="color-values">
+                            HEX: #ffffff<br>
+                            RGB: 255, 255, 255
+                        </div>
+                        <div class="color-usage">Background, cards</div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="mt-40">Gray Scale</h3>
+            <div class="grid grid-4">
+                <div class="color-swatch">
+                    <div class="color-preview" style="background-color: #f7f7f7; color: #333;">Light Gray</div>
+                    <div class="color-info">
+                        <div class="color-name">Light Gray</div>
+                        <div class="color-values">
+                            HEX: #f7f7f7<br>
+                            RGB: 247, 247, 247
+                        </div>
+                        <div class="color-usage">Section backgrounds</div>
+                    </div>
+                </div>
+
+                <div class="color-swatch">
+                    <div class="color-preview" style="background-color: #efefef; color: #333;">Off-White Gray</div>
+                    <div class="color-info">
+                        <div class="color-name">Off-White Gray</div>
+                        <div class="color-values">
+                            HEX: #efefef<br>
+                            RGB: 239, 239, 239
+                        </div>
+                        <div class="color-usage">Form backgrounds</div>
+                    </div>
+                </div>
+
+                <div class="color-swatch">
+                    <div class="color-preview" style="background-color: #eee; color: #333;">Very Light Gray</div>
+                    <div class="color-info">
+                        <div class="color-name">Very Light Gray</div>
+                        <div class="color-values">
+                            HEX: #eeeeee<br>
+                            RGB: 238, 238, 238
+                        </div>
+                        <div class="color-usage">Disabled states</div>
+                    </div>
+                </div>
+
+                <div class="color-swatch">
+                    <div class="color-preview" style="background-color: #dddddd; color: #333;">Lighter Gray</div>
+                    <div class="color-info">
+                        <div class="color-name">Lighter Gray</div>
+                        <div class="color-values">
+                            HEX: #dddddd<br>
+                            RGB: 221, 221, 221
+                        </div>
+                        <div class="color-usage">Button backgrounds</div>
+                    </div>
+                </div>
+
+                <div class="color-swatch">
+                    <div class="color-preview" style="background-color: #ccc; color: #333;">Medium Gray</div>
+                    <div class="color-info">
+                        <div class="color-name">Medium Gray</div>
+                        <div class="color-values">
+                            HEX: #cccccc<br>
+                            RGB: 204, 204, 204
+                        </div>
+                        <div class="color-usage">Borders, placeholders</div>
+                    </div>
+                </div>
+
+                <div class="color-swatch">
+                    <div class="color-preview" style="background-color: #999; color: #fff;">Dark Gray</div>
+                    <div class="color-info">
+                        <div class="color-name">Dark Gray</div>
+                        <div class="color-values">
+                            HEX: #999999<br>
+                            RGB: 153, 153, 153
+                        </div>
+                        <div class="color-usage">Secondary text, footer</div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="mt-40">Utility Colors</h3>
+            <div class="grid grid-2">
+                <div class="color-swatch">
+                    <div class="color-preview" style="background-color: #f90;">Orange</div>
+                    <div class="color-info">
+                        <div class="color-name">Orange</div>
+                        <div class="color-values">
+                            HEX: #ff9900<br>
+                            RGB: 255, 153, 0<br>
+                            Usage: Error messages
+                        </div>
+                        <div class="color-usage">Form validation errors, alerts</div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="mt-40">Overlay Colors</h3>
+            <div class="type-sample">
+                <h4>Image Overlays for Text Legibility</h4>
+                <ul style="line-height: 2;">
+                    <li><strong>Homepage Header:</strong> rgba(0, 0, 0, 0.2) - 20% black overlay</li>
+                    <li><strong>Search Widget:</strong> rgba(0, 0, 0, 0.4) - 40% black overlay</li>
+                    <li><strong>Hero Images:</strong> rgba(0, 0, 0, 0.5) - 50% black overlay</li>
+                    <li><strong>Gradient Overlays:</strong> rgba(0, 0, 0, 0.65) - 65% black overlay</li>
+                    <li><strong>Fixed Header (Scrolled):</strong> rgba(0, 0, 0, 0.8) - 80% black overlay</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Typography -->
+    <section id="typography" class="section">
+        <div class="container">
+            <h2>Typography</h2>
+
+            <div class="alert">
+                <strong>⚠️ Important Note: Font Override</strong>
+                The website's CSS contains Work Sans declarations in child.css, but these are overridden by Arial declarations in style.css. Currently, the site uses <strong>Arial, Helvetica, sans-serif</strong>. Consider whether Work Sans should be fully implemented for a more modern, branded appearance.
+            </div>
+
+            <h3 class="mt-40">Current Typography</h3>
+            <div class="type-sample">
+                <div class="type-display" style="font-size: 40px; font-weight: 700; line-height: 1.2; color: #b3503e;">
+                    The quick brown fox jumps over the lazy dog
+                </div>
+                <div class="type-details">
+                    Arial Bold (700) / 40px / Color: #b3503e (Russet Red) / Line height: 1.2<br>
+                    Usage: Section headings (h2)
+                </div>
+            </div>
+
+            <div class="type-sample">
+                <div class="type-display" style="font-size: 28px; font-weight: 700; color: #b3503e;">
+                    The quick brown fox jumps over the lazy dog
+                </div>
+                <div class="type-details">
+                    Arial Bold (700) / 28px / Color: #b3503e (Russet Red)<br>
+                    Usage: Subheadings (h3)
+                </div>
+            </div>
+
+            <div class="type-sample">
+                <div class="type-display" style="font-size: 20px; font-weight: 700; color: #333;">
+                    The quick brown fox jumps over the lazy dog
+                </div>
+                <div class="type-details">
+                    Arial Bold (700) / 20px / Color: #333 (Charcoal)<br>
+                    Usage: Sub-subheadings (h4)
+                </div>
+            </div>
+
+            <div class="type-sample">
+                <div class="type-display" style="font-size: 16px; font-weight: 300; line-height: 1.75;">
+                    Second Home Vacation Rentals provides professional property management services in Colorado's Rocky Mountain region. Our properties offer families and groups a unique lodging experience with seclusion, privacy, and a home-like feel.
+                </div>
+                <div class="type-details">
+                    Arial / 16px / Line height: 1.75<br>
+                    Usage: Body text, paragraphs
+                </div>
+            </div>
+
+            <h3 class="mt-40">Font Comparison: Current vs. Alternative</h3>
+            <div class="font-comparison">
+                <div class="font-sample current">
+                    <h4>Arial, Helvetica (Current)</h4>
+                    <div style="font-size: 32px; font-weight: 700; color: #b3503e; margin: 20px 0;">Mountain Living</div>
+                    <p>Second Home Vacation Rentals provides professional property management services in Colorado's Rocky Mountain region. Our properties offer families and groups a unique lodging experience.</p>
+                    <p style="font-size: 14px; color: #999; margin-top: 20px;"><strong>Pros:</strong> Universal availability, clean readability, consistent rendering<br>
+                    <strong>Cons:</strong> Generic, less personality, common</p>
+                </div>
+
+                <div class="font-sample alternative">
+                    <h4 style="font-family: 'Work Sans', sans-serif;">Work Sans (Alternative)</h4>
+                    <div style="font-family: 'Work Sans', sans-serif; font-size: 32px; font-weight: 700; color: #b3503e; margin: 20px 0;">Mountain Living</div>
+                    <p style="font-family: 'Work Sans', sans-serif; font-weight: 300;">Second Home Vacation Rentals provides professional property management services in Colorado's Rocky Mountain region. Our properties offer families and groups a unique lodging experience.</p>
+                    <p style="font-size: 14px; color: #999; margin-top: 20px;"><strong>Pros:</strong> Modern, distinctive, designed for web, geometric clarity<br>
+                    <strong>Cons:</strong> Requires web font loading, minimal performance impact</p>
+                </div>
+            </div>
+
+            <h3 class="mt-40">Font Stack</h3>
+            <div class="type-sample">
+                <code style="font-family: monospace; color: #00BF8F;">font-family: Arial, Helvetica, sans-serif;</code>
+                <p style="margin-top: 15px;"><strong>Alternative (if switching):</strong></p>
+                <code style="font-family: monospace; color: #b3503e;">font-family: 'Work Sans', sans-serif;</code>
+                <p style="margin-top: 15px;">Source (if using Work Sans): <a href="https://fonts.google.com/specimen/Work+Sans" style="color: #00BF8F;">Google Fonts</a></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Logo Usage -->
+    <section id="logo" class="section section--gray">
+        <div class="container">
+            <h2>Logo Usage</h2>
+
+            <div class="grid grid-2 mt-40">
+                <div>
+                    <h4>On Light Backgrounds</h4>
+                    <div class="logo-example">
+                        <img src="logo-charcoal-500.png" alt="Second Home Logo">
+                    </div>
+                    <p>Use the charcoal logo on white or light backgrounds. The charcoal color (#333) provides excellent contrast and readability.</p>
+                </div>
+
+                <div>
+                    <h4>On Dark Backgrounds</h4>
+                    <div class="logo-example logo-example--dark">
+                        <img src="logo-charcoal-500.png" alt="Second Home Logo">
+                    </div>
+                    <p>On dark backgrounds, invert the logo to white using CSS: <code style="background: #f7f7f7; padding: 2px 6px;">filter: brightness(0) invert(1);</code></p>
+                </div>
+            </div>
+
+            <h3 class="mt-40">Logo Specifications</h3>
+            <div class="type-sample">
+                <ul style="line-height: 2;">
+                    <li><strong>Format:</strong> PNG with transparency</li>
+                    <li><strong>Logo Files:</strong>
+                        <ul style="margin-top: 10px;">
+                            <li>logo-charcoal-500.png - For light backgrounds (charcoal #333)</li>
+                            <li>logo-500.png - Original full color</li>
+                            <li>logo--black-500.png - Pure black version</li>
+                        </ul>
+                    </li>
+                    <li><strong>Clear Space:</strong> Minimum space equal to height of "S" in "Second"</li>
+                    <li><strong>Minimum Size:</strong> 210px width on mobile, 300px+ on desktop</li>
+                    <li><strong>Dark Background Treatment:</strong> Use charcoal logo with CSS filter: brightness(0) invert(1)</li>
+                    <li><strong>Positioning:</strong> Centered on hero/banners, left-aligned in navigation</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- UI Components -->
+    <section id="components" class="section">
+        <div class="container">
+            <h2>UI Components</h2>
+
+            <h3 class="mt-40">Buttons</h3>
+            <div style="display: flex; gap: 20px; flex-wrap: wrap; margin: 30px 0;">
+                <button class="button button-primary">Primary Button</button>
+                <button class="button button-secondary">Secondary Button</button>
+                <button class="button button-outline">Outline Button</button>
+            </div>
+
+            <div class="type-sample">
+                <h4>Button Specifications</h4>
+                <ul style="line-height: 2;">
+                    <li><strong>Display:</strong> inline-block (NOT full width)</li>
+                    <li><strong>Border Radius:</strong> 0 (sharp corners)</li>
+                    <li><strong>Padding:</strong> 12px 30px</li>
+                    <li><strong>Font:</strong> Arial, 16px, normal weight</li>
+                    <li><strong>Transition:</strong> 0.3s ease on hover</li>
+                    <li><strong>Primary (#00BF8F):</strong> Darkens to #00a077 on hover</li>
+                    <li><strong>Secondary (#b3503e):</strong> Darkens to #9a4434 on hover</li>
+                    <li><strong>Border:</strong> None for filled buttons, 2px for outline buttons</li>
+                    <li><strong>Width:</strong> Auto (content-based), never full width unless in mobile forms</li>
+                </ul>
+            </div>
+
+            <h3 class="mt-40">Form Elements</h3>
+            <div class="form-example">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" placeholder="Enter your name">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" rows="4" placeholder="Your message here..."></textarea>
+                </div>
+                <button class="button button-primary">Submit</button>
+            </div>
+
+            <div class="type-sample mt-40">
+                <h4>Form Specifications</h4>
+                <ul style="line-height: 2;">
+                    <li><strong>Border:</strong> 2px solid #ccc</li>
+                    <li><strong>Border Radius:</strong> 0 (sharp corners)</li>
+                    <li><strong>Focus State:</strong> Border color changes to #00BF8F</li>
+                    <li><strong>Padding:</strong> 10px</li>
+                    <li><strong>Font:</strong> Arial, Helvetica, sans-serif, 16px</li>
+                    <li><strong>Background:</strong> White (#fff) or transparent on dark backgrounds</li>
+                    <li><strong>Placeholder Color:</strong> #ccc (medium gray)</li>
+                </ul>
+            </div>
+
+            <h3 class="mt-40">Spacing System</h3>
+            <div class="spacing-demo">
+                <div class="spacing-box">Section Padding: 50px vertical</div>
+            </div>
+            <br>
+            <div class="spacing-demo">
+                <h3 style="margin-bottom: 20px; color: #b3503e;">Section Heading (20px margin)</h3>
+                <p style="margin-bottom: 20px; color: #333;">Paragraph text with consistent spacing between elements. This demonstrates the standard 20px margin that should be applied between major content blocks.</p>
+                <img src="photo2.jpg" alt="Property example" style="width: 100%; height: 200px; object-fit: cover; margin-bottom: 20px; display: block;">
+                <button class="button button-primary">Call to Action Button</button>
+            </div>
+
+            <div class="type-sample mt-40">
+                <h4>Spacing Guidelines</h4>
+                <ul style="line-height: 2;">
+                    <li><strong>Section Padding:</strong> 50px vertical (top and bottom)</li>
+                    <li><strong>Container Max Width:</strong> 1200px</li>
+                    <li><strong>Container Padding:</strong> 20px horizontal</li>
+                    <li><strong>Element Margins:</strong> 20px between major elements</li>
+                    <li><strong>Grid Gap:</strong> 30px between grid items</li>
+                    <li><strong>Form Field Margin:</strong> 20px bottom spacing</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Photography Guidelines -->
+    <section class="section section--dark">
+        <div class="container">
+            <h2 style="color: #b3503e;">Photography Guidelines</h2>
+
+            <div class="grid grid-2 mt-40">
+                <div>
+                    <h3 style="color: #fff;">Subject Matter</h3>
+                    <ul style="line-height: 2;">
+                        <li>Mountain landscapes and vistas</li>
+                        <li>Property exteriors with natural settings</li>
+                        <li>Interior spaces with natural light</li>
+                        <li>Outdoor activities (hiking, skiing, etc.)</li>
+                        <li>Families and groups enjoying properties</li>
+                        <li>Premium amenities (hot tubs, game rooms)</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 style="color: #fff;">Style Guidelines</h3>
+                    <ul style="line-height: 2;">
+                        <li>Natural lighting preferred</li>
+                        <li>Warm, inviting color tones</li>
+                        <li>Wide shots showing context</li>
+                        <li>High resolution for web use</li>
+                        <li>Authentic, not overly staged</li>
+                        <li>Showcase mountain environment</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Image Usage -->
+    <section class="section">
+        <div class="container">
+            <h2>Image Usage</h2>
+
+            <h3 class="mt-40">Inline Images</h3>
+            <p class="text-center" style="max-width: 800px; margin: 0 auto 30px auto;">Inline images should showcase property features, mountain landscapes, and vacation experiences. Use high-quality photography that reflects the Second Home brand aesthetic.</p>
+
+            <div class="grid grid-2">
+                <div>
+                    <img src="photo1.jpg" alt="Mountain landscape" style="width: 100%; height: auto; display: block;">
+                    <p style="margin-top: 10px; font-size: 14px; color: #999;">Mountain landscapes - wide shots showcasing natural beauty</p>
+                </div>
+                <div>
+                    <img src="photo2.jpg" alt="Property exterior" style="width: 100%; height: auto; display: block;">
+                    <p style="margin-top: 10px; font-size: 14px; color: #999;">Property exteriors - context with surrounding environment</p>
+                </div>
+            </div>
+
+            <h3 class="mt-40">Background Images with Overlays</h3>
+            <p class="text-center" style="max-width: 800px; margin: 0 auto 30px auto;">When placing text over images, always use dark overlays to ensure readability. This is critical for hero sections, banners, and call-to-action areas.</p>
+
+            <div class="grid grid-2">
+                <div>
+                    <div style="position: relative; width: 100%; height: 300px; background: url('photo3.jpg') center/cover;">
+                        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; flex-direction: column; padding: 30px; text-align: center;">
+                            <h3 style="color: #fff; margin-bottom: 15px;">50% Black Overlay</h3>
+                            <p style="color: #fff; margin: 0;">rgba(0, 0, 0, 0.5)</p>
+                            <p style="color: #fff; margin-top: 10px; font-size: 14px;">Good for hero sections and banners</p>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div style="position: relative; width: 100%; height: 300px; background: url('photo4.jpg') center/cover;">
+                        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; flex-direction: column; padding: 30px; text-align: center;">
+                            <h3 style="color: #fff; margin-bottom: 15px;">40% Black Overlay</h3>
+                            <p style="color: #fff; margin: 0;">rgba(0, 0, 0, 0.4)</p>
+                            <p style="color: #fff; margin-top: 10px; font-size: 14px;">Good for search widgets and forms</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="mt-40">Image Specifications</h3>
+            <div class="type-sample">
+                <h4>Technical Requirements</h4>
+                <ul style="line-height: 2;">
+                    <li><strong>Format:</strong> JPEG for photos, PNG for graphics with transparency</li>
+                    <li><strong>Resolution:</strong> Minimum 1920px wide for hero images, 800px for content images</li>
+                    <li><strong>Optimization:</strong> Compress images for web (aim for under 500KB per image)</li>
+                    <li><strong>Aspect Ratios:</strong> 16:9 for hero/banner images, 4:3 or 3:2 for property photos</li>
+                    <li><strong>Alt Text:</strong> Always include descriptive alt text for accessibility</li>
+                </ul>
+
+                <h4 style="margin-top: 30px;">Overlay Best Practices</h4>
+                <ul style="line-height: 2;">
+                    <li><strong>Dark Overlays:</strong> Use rgba(0, 0, 0, 0.4) to rgba(0, 0, 0, 0.8) depending on image brightness</li>
+                    <li><strong>Text Contrast:</strong> Ensure white text has sufficient contrast over dark overlays</li>
+                    <li><strong>Gradient Overlays:</strong> Use top-to-bottom gradients (65% to transparent) for subtle effects</li>
+                    <li><strong>Hero Sections:</strong> 50% overlay is standard for main hero images</li>
+                    <li><strong>Search Widgets:</strong> 40% overlay works well for form areas</li>
+                    <li><strong>Fixed Headers:</strong> 80% overlay when scrolled for maximum text legibility</li>
+                </ul>
+
+                <h4 style="margin-top: 30px;">Image with Spacing Example</h4>
+                <div style="background: #f7f7f7; padding: 20px; border: 2px dashed #ccc; margin-top: 20px;">
+                    <div style="background: #b3503e; color: #fff; padding: 20px; text-align: center; font-weight: 700; margin-bottom: 20px;">Heading (20px margin)</div>
+                    <img src="photo1.jpg" alt="Example property" style="width: 100%; height: 200px; object-fit: cover; margin-bottom: 20px;">
+                    <div style="background: #333; color: #fff; padding: 20px; text-align: center; font-weight: 700; margin-bottom: 20px;">Text Content (20px margin)</div>
+                    <button class="button button-primary">Call to Action</button>
+                </div>
+                <p style="margin-top: 15px; font-size: 14px; color: #999;">Consistent 20px margins between all major elements including images</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Design Principles -->
+    <section class="section">
+        <div class="container">
+            <h2>Design Principles</h2>
+
+            <div class="grid grid-3 mt-40">
+                <div class="type-sample">
+                    <h4>Modern & Clean</h4>
+                    <p>Use sharp corners (no border radius), ample whitespace, and clear hierarchy. Let content breathe with generous spacing.</p>
+                </div>
+
+                <div class="type-sample">
+                    <h4>Mountain Aesthetic</h4>
+                    <p>Natural color palette inspired by Rocky Mountains. Use landscape photography and earthy tones throughout.</p>
+                </div>
+
+                <div class="type-sample">
+                    <h4>Professional Yet Welcoming</h4>
+                    <p>Balance expertise with approachability. Use clean typography and friendly language without sacrificing professionalism.</p>
+                </div>
+
+                <div class="type-sample">
+                    <h4>Image-Forward</h4>
+                    <p>Lead with compelling property and landscape photography. Images should be large, high-quality, and showcase the experience.</p>
+                </div>
+
+                <div class="type-sample">
+                    <h4>Mobile-First</h4>
+                    <p>Design for mobile devices first, then enhance for larger screens. Ensure touch-friendly targets and readable text.</p>
+                </div>
+
+                <div class="type-sample">
+                    <h4>Functional</h4>
+                    <p>Prioritize usability. Clear CTAs, intuitive navigation, and accessible design for all users.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tone of Voice -->
+    <section class="section section--gray">
+        <div class="container">
+            <h2>Tone of Voice</h2>
+
+            <div class="grid grid-2 mt-40">
+                <div class="type-sample">
+                    <h4>We Are:</h4>
+                    <ul style="line-height: 2;">
+                        <li><strong>Clear & Direct</strong> - Straightforward communication</li>
+                        <li><strong>Informative</strong> - Provide valuable local knowledge</li>
+                        <li><strong>Friendly</strong> - Approachable without being casual</li>
+                        <li><strong>Confident</strong> - Expert-driven but not boastful</li>
+                        <li><strong>Helpful</strong> - Focus on solving needs</li>
+                    </ul>
+                </div>
+
+                <div class="type-sample">
+                    <h4>Example Phrases:</h4>
+                    <p style="margin-bottom: 15px;"><em>"Vacation rentals offer travelers a unique lodging experience"</em></p>
+                    <p style="margin-bottom: 15px;"><em>"Seclusion and privacy with a home-like feel"</em></p>
+                    <p style="margin-bottom: 15px;"><em>"Almost every outdoor activity imaginable"</em></p>
+                    <p style="margin-bottom: 15px;"><em>"7 days a week support"</em></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Do's and Don'ts -->
+    <section class="section">
+        <div class="container">
+            <h2>Brand Guidelines Do's & Don'ts</h2>
+
+            <div class="do-dont-grid mt-40">
+                <div class="do-dont-card do-card">
+                    <div class="do-dont-label">✓ Do</div>
+                    <ul>
+                        <li>Use the sage green (#00BF8F) as the primary brand color</li>
+                        <li>Maintain sharp corners (border-radius: 0) on all UI elements</li>
+                        <li>Use high-quality mountain and property photography</li>
+                        <li>Maintain logo aspect ratio at all times</li>
+                        <li>Use adequate clear space around the logo</li>
+                        <li>Invert logo to white on dark backgrounds</li>
+                        <li>Apply dark overlays (rgba) for text over images</li>
+                        <li>Use generous whitespace and spacing (50px sections)</li>
+                        <li>Keep forms clean with 2px borders and #ccc color</li>
+                        <li>Emphasize mobile-first responsive design</li>
+                        <li>Use Arial (or consider upgrading to Work Sans)</li>
+                        <li>Apply #00BF8F color on focus states for forms</li>
+                        <li>Keep copy clear, direct, and helpful</li>
+                        <li>Showcase outdoor activities and mountain lifestyle</li>
+                    </ul>
+                </div>
+
+                <div class="do-dont-card dont-card">
+                    <div class="do-dont-label">✗ Don't</div>
+                    <ul>
+                        <li>Don't use rounded corners or border radius</li>
+                        <li>Don't distort or stretch the logo</li>
+                        <li>Don't change logo colors or add effects</li>
+                        <li>Don't rotate or tilt the logo</li>
+                        <li>Don't place logo on busy backgrounds without overlay</li>
+                        <li>Don't use colors outside the defined palette</li>
+                        <li>Don't mix font families (stick to Arial or Work Sans)</li>
+                        <li>Don't use heavy font weights for body text</li>
+                        <li>Don't use images without proper optimization</li>
+                        <li>Don't place text over images without dark overlays</li>
+                        <li>Don't use inconsistent spacing or padding</li>
+                        <li>Don't create cluttered layouts with insufficient whitespace</li>
+                        <li>Don't use jargon or overly technical language</li>
+                        <li>Don't forget mobile optimization and testing</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Tools & Export -->
+    <section class="section section--gray">
+        <div class="container">
+            <h2>AI Tools & Export</h2>
+
+            <h3 class="mt-40">Full Brand Guidelines (Markdown)</h3>
+            <p class="text-center" style="max-width: 800px; margin: 0 auto 30px auto;">Click anywhere in the text below to copy the complete brand guidelines. Perfect for pasting into AI tools like ChatGPT, Claude, or other design assistants.</p>
+
+            <div id="markdown-container" style="position: relative;">
+                <textarea id="markdown-guidelines" readonly onclick="copyMarkdown()" style="width: 100%; height: 400px; padding: 20px; font-family: 'Courier New', monospace; font-size: 12px; border: 2px solid #ccc; background: #fff; resize: vertical; line-height: 1.6; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.borderColor='#00BF8F'" onmouseout="this.style.borderColor='#ccc'">
+# Second Home Vacation Rentals - Brand Guidelines
+
+## Brand Overview
+Second Home Vacation Rentals provides professional vacation rental management in Colorado's Rocky Mountain region. Our brand reflects the natural beauty of the mountains, the warmth of a home away from home, and our commitment to exceptional service.
+
+## Color Palette
+
+### Primary Colors
+- **Sage Green**: #00BF8F (RGB: 0, 191, 143) - Primary brand color for links, CTAs, and accents
+- **Russet Red**: #b3503e (RGB: 179, 80, 62) - Secondary color for headings, buttons, and warm accents
+
+### Neutral Colors
+- **Charcoal**: #333333 - Headers, body text
+- **Near Black**: #232323 - Text shadows
+- **Black**: #000000 - Footer, emphasis
+- **White**: #ffffff - Backgrounds, cards
+
+### Gray Scale
+- **Light Gray**: #f7f7f7 - Section backgrounds
+- **Off-White Gray**: #efefef - Form backgrounds
+- **Very Light Gray**: #eeeeee - Disabled states
+- **Lighter Gray**: #dddddd - Button backgrounds
+- **Medium Gray**: #cccccc - Borders, placeholders
+- **Dark Gray**: #999999 - Secondary text, footer text
+
+### Utility Colors
+- **Orange**: #ff9900 - Error messages and alerts
+
+### Overlay Colors (for text over images)
+- rgba(0, 0, 0, 0.2) - 20% black for homepage header
+- rgba(0, 0, 0, 0.4) - 40% black for search widgets
+- rgba(0, 0, 0, 0.5) - 50% black for hero images
+- rgba(0, 0, 0, 0.65) - 65% black for gradient overlays
+- rgba(0, 0, 0, 0.8) - 80% black for fixed header when scrolled
+
+## Typography
+
+### Current Font Stack
+**Primary**: Arial, Helvetica, sans-serif
+
+### Font Specifications
+- **Section Headings (h2)**: Arial Bold (700), 40px, #b3503e (Russet Red)
+- **Subheadings (h3)**: Arial Bold (700), 28px, #b3503e (Russet Red)
+- **Sub-subheadings (h4)**: Arial Bold (700), 20px, #333 (Charcoal)
+- **Body Text**: Arial, 16px, weight 300 or normal, line-height 1.75, #333 (Charcoal)
+- **Hero Titles**: Arial Light (300), 48px, #fff (White)
+
+### Alternative Font (in CSS but currently overridden)
+Work Sans (Google Fonts) - Available as modern alternative if brand wants to switch
+
+## Logo Usage
+
+### Logo Files
+- logo-charcoal-500.png - For light backgrounds (charcoal #333)
+- logo-500.png - Original full color
+- logo--black-500.png - Pure black version
+
+### Specifications
+- Format: PNG with transparency
+- Clear Space: Minimum space equal to height of "S" in "Second"
+- Minimum Size: 210px width on mobile, 300px+ on desktop
+- Dark Background Treatment: Use charcoal logo with CSS filter: brightness(0) invert(1)
+- Positioning: Centered on hero/banners, left-aligned in navigation
+- Maximum Size: 500px for hero sections
+
+## Buttons
+
+### Specifications
+- Display: inline-block (NOT full width)
+- Border Radius: 0 (sharp corners - never rounded)
+- Padding: 12px 30px
+- Font: Arial, 16px, normal weight
+- Transition: 0.3s ease on hover
+- Width: Auto (content-based), never full width unless in mobile forms
+
+### Button Colors
+- **Primary**: #00BF8F background, darkens to #00a077 on hover, white text
+- **Secondary**: #b3503e background, darkens to #9a4434 on hover, white text
+- **Outline**: Transparent background, #333 border (2px), #333 text, inverts on hover
+
+## Form Elements
+
+### Input Fields & Textareas
+- Border: 2px solid #ccc
+- Border Radius: 0 (sharp corners)
+- Focus State: Border color changes to #00BF8F
+- Padding: 10px
+- Font: Arial, Helvetica, sans-serif, 16px
+- Background: White (#fff) or transparent on dark backgrounds
+- Placeholder Color: #ccc (medium gray)
+
+## Spacing System
+- **Section Padding**: 50px vertical (top and bottom)
+- **Container Max Width**: 1200px
+- **Container Padding**: 20px horizontal
+- **Element Margins**: 20px between major elements (headings, paragraphs, images, buttons)
+- **Grid Gap**: 30px between grid items
+- **Form Field Margin**: 20px bottom spacing
+
+## Image Guidelines
+
+### Inline Images
+- Format: JPEG for photos, PNG for graphics with transparency
+- Resolution: Minimum 1920px wide for hero images, 800px for content images
+- Optimization: Compress images for web (aim for under 500KB per image)
+- Aspect Ratios: 16:9 for hero/banner images, 4:3 or 3:2 for property photos
+- Alt Text: Always include descriptive alt text for accessibility
+
+### Background Images with Overlays
+- Always use dark overlays when placing text over images
+- Hero Sections: 50% black overlay (rgba(0, 0, 0, 0.5))
+- Search Widgets: 40% black overlay (rgba(0, 0, 0, 0.4))
+- Fixed Headers (scrolled): 80% black overlay (rgba(0, 0, 0, 0.8))
+- Gradient Overlays: Top-to-bottom gradients (65% to transparent) for subtle effects
+
+### Photography Style
+- Subject Matter: Mountain landscapes, property exteriors with natural settings, interiors with natural light, outdoor activities, families enjoying properties, premium amenities
+- Style: Natural lighting preferred, warm inviting tones, wide shots showing context, high resolution, authentic (not overly staged), showcase mountain environment
+
+## Design Principles
+
+### Modern & Clean
+Use sharp corners (border-radius: 0), ample whitespace, and clear hierarchy. Let content breathe with generous spacing.
+
+### Mountain Aesthetic
+Natural color palette inspired by Rocky Mountains. Use landscape photography and earthy tones throughout.
+
+### Professional Yet Welcoming
+Balance expertise with approachability. Use clean typography and friendly language without sacrificing professionalism.
+
+### Image-Forward
+Lead with compelling property and landscape photography. Images should be large, high-quality, and showcase the experience.
+
+### Mobile-First
+Design for mobile devices first, then enhance for larger screens. Ensure touch-friendly targets and readable text.
+
+### Functional
+Prioritize usability. Clear CTAs, intuitive navigation, and accessible design for all users.
+
+## Tone of Voice
+
+### Brand Personality
+- **Clear & Direct**: Straightforward communication
+- **Informative**: Provide valuable local knowledge
+- **Friendly**: Approachable without being casual
+- **Confident**: Expert-driven but not boastful
+- **Helpful**: Focus on solving customer needs
+
+### Example Phrases
+- "Vacation rentals offer travelers a unique lodging experience"
+- "Seclusion and privacy with a home-like feel"
+- "Almost every outdoor activity imaginable"
+- "7 days a week support"
+
+## Do's
+
+✓ Use the sage green (#00BF8F) as the primary brand color
+✓ Maintain sharp corners (border-radius: 0) on all UI elements
+✓ Use high-quality mountain and property photography
+✓ Maintain logo aspect ratio at all times
+✓ Use adequate clear space around the logo
+✓ Invert logo to white on dark backgrounds
+✓ Apply dark overlays (rgba) for text over images
+✓ Use generous whitespace and spacing (50px sections)
+✓ Keep forms clean with 2px borders and #ccc color
+✓ Emphasize mobile-first responsive design
+✓ Use Arial (or consider upgrading to Work Sans)
+✓ Apply #00BF8F color on focus states for forms
+✓ Keep copy clear, direct, and helpful
+✓ Showcase outdoor activities and mountain lifestyle
+
+## Don'ts
+
+✗ Don't use rounded corners or border radius
+✗ Don't distort or stretch the logo
+✗ Don't change logo colors or add effects
+✗ Don't rotate or tilt the logo
+✗ Don't place logo on busy backgrounds without overlay
+✗ Don't use colors outside the defined palette
+✗ Don't mix font families (stick to Arial or Work Sans)
+✗ Don't use heavy font weights for body text
+✗ Don't use images without proper optimization
+✗ Don't place text over images without dark overlays
+✗ Don't use inconsistent spacing or padding
+✗ Don't create cluttered layouts with insufficient whitespace
+✗ Don't use jargon or overly technical language
+✗ Don't forget mobile optimization and testing
+                </textarea>
+            </div>
+
+            <h3 class="mt-40">AI Image Generation Prompts</h3>
+            <p class="text-center" style="max-width: 800px; margin: 0 auto 30px auto;">Click any prompt below to copy it. Use these in AI image generators like DALL-E, Midjourney, Stable Diffusion, or Adobe Firefly to create on-brand imagery.</p>
+
+            <div class="grid grid-2">
+                <div id="prompt1-container" style="position: relative;">
+                    <h4>1. Cinematic Mountain Photography</h4>
+                    <textarea id="prompt1" readonly onclick="copyPrompt('prompt1')" style="width: 100%; height: 180px; padding: 15px; font-family: Arial, Helvetica, sans-serif; font-size: 14px; border: 2px solid #ccc; background: #fff; resize: vertical; line-height: 1.8; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.borderColor='#00BF8F'" onmouseout="this.style.borderColor='#ccc'">Style: Professional travel photography with cinematic quality. Use golden hour lighting for warm, natural tones with soft shadows. Color grading should emphasize natural greens (#00BF8F range) and earth tones with warm russet accents (#b3503e range). High resolution, sharp focus. Maintain authentic, unfiltered mountain aesthetic. Lighting should feel natural, not artificial. Overall mood: majestic yet approachable, showcasing pristine wilderness.</textarea>
+                </div>
+
+                <div id="prompt2-container" style="position: relative;">
+                    <h4>2. Architectural Mountain Lodge Style</h4>
+                    <textarea id="prompt2" readonly onclick="copyPrompt('prompt2')" style="width: 100%; height: 180px; padding: 15px; font-family: Arial, Helvetica, sans-serif; font-size: 14px; border: 2px solid #ccc; background: #fff; resize: vertical; line-height: 1.8; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.borderColor='#00BF8F'" onmouseout="this.style.borderColor='#ccc'">Style: Architectural photography emphasizing natural materials and mountain integration. Use late afternoon lighting for warm, inviting tones with soft shadows. Sharp focus throughout with shallow depth of field where appropriate. Color palette: natural wood tones, forest greens, and earth tones. Professional real estate photography quality. Convey both luxury and comfort through lighting and composition. Overall aesthetic: modern mountain elegance with natural surroundings.</textarea>
+                </div>
+
+                <div id="prompt3-container" style="position: relative;">
+                    <h4>3. Warm Interior Design Photography</h4>
+                    <textarea id="prompt3" readonly onclick="copyPrompt('prompt3')" style="width: 100%; height: 180px; padding: 15px; font-family: Arial, Helvetica, sans-serif; font-size: 14px; border: 2px solid #ccc; background: #fff; resize: vertical; line-height: 1.8; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.borderColor='#00BF8F'" onmouseout="this.style.borderColor='#ccc'">Style: Interior design photography with cozy, inviting atmosphere. Warm natural lighting mixed with soft ambient interior lighting. Color palette: earth tones, warm browns, natural wood colors, with touches of sage green (#00BF8F). Professional magazine-quality interior photography. High-end finishes visible. The space should feel lived-in and welcoming without appearing staged. Overall mood: comfort, luxury, and family-friendly warmth.</textarea>
+                </div>
+
+                <div id="prompt4-container" style="position: relative;">
+                    <h4>4. Active Lifestyle Photography</h4>
+                    <textarea id="prompt4" readonly onclick="copyPrompt('prompt4')" style="width: 100%; height: 180px; padding: 15px; font-family: Arial, Helvetica, sans-serif; font-size: 14px; border: 2px solid #ccc; background: #fff; resize: vertical; line-height: 1.8; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.borderColor='#00BF8F'" onmouseout="this.style.borderColor='#ccc'">Style: Authentic lifestyle photography, candid and unposed. Natural lighting, preferably golden hour for warm tones. Color emphasis on natural environment greens and earth tones. Professional outdoor recreation photography aesthetic. Sharp focus with natural depth of field. The mood should be adventurous yet accessible, energetic but not extreme. Overall feel: authentic outdoor experience, inviting for all skill levels.</textarea>
+                </div>
+
+                <div id="prompt5-container" style="position: relative;">
+                    <h4>5. Luxury Detail Photography</h4>
+                    <textarea id="prompt5" readonly onclick="copyPrompt('prompt5')" style="width: 100%; height: 180px; padding: 15px; font-family: Arial, Helvetica, sans-serif; font-size: 14px; border: 2px solid #ccc; background: #fff; resize: vertical; line-height: 1.8; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.borderColor='#00BF8F'" onmouseout="this.style.borderColor='#ccc'">Style: Lifestyle photography with focus on luxury details and ambiance. Warm, inviting lighting combining natural light with supplemental interior lighting. Sharp focus on main subject with contextual background. Color palette: warm inviting tones, natural materials emphasis, earth tones. Professional hospitality photography quality. Overall mood: comfort, luxury, and relaxation. Convey premium experience through lighting and color warmth.</textarea>
+                </div>
+
+                <div id="prompt6-container" style="position: relative;">
+                    <h4>6. Blue Hour Winter Photography</h4>
+                    <textarea id="prompt6" readonly onclick="copyPrompt('prompt6')" style="width: 100%; height: 180px; padding: 15px; font-family: Arial, Helvetica, sans-serif; font-size: 14px; border: 2px solid #ccc; background: #fff; resize: vertical; line-height: 1.8; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.borderColor='#00BF8F'" onmouseout="this.style.borderColor='#ccc'">Style: Winter travel photography captured during blue hour for dramatic lighting. High contrast between cool twilight blues and warm interior lighting glow. Crisp, clean aesthetic with sharp details. Professional landscape photography quality. Color palette: cool blues and whites contrasted with warm amber interior light. Overall mood: peaceful, serene, and inviting despite winter setting. Convey winter getaway appeal through lighting contrast and composition.</textarea>
+                </div>
+            </div>
+
+            <div class="type-sample mt-40">
+                <h4>Tips for Using AI Image Prompts</h4>
+                <ul style="line-height: 2;">
+                    <li><strong>Be Specific:</strong> These prompts are detailed for a reason - specificity yields better results</li>
+                    <li><strong>Adjust as Needed:</strong> Feel free to modify prompts based on your specific needs</li>
+                    <li><strong>Maintain Brand Colors:</strong> Emphasize natural greens, earth tones, and warm lighting</li>
+                    <li><strong>Check Licensing:</strong> Ensure AI-generated images comply with usage rights for commercial use</li>
+                    <li><strong>Iterate:</strong> Generate multiple variations and select the best match for brand aesthetic</li>
+                    <li><strong>Post-Processing:</strong> Apply brand color grading and overlays as needed for consistency</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Second Home Vacation Rentals. All rights reserved.</p>
+            <p style="margin-top: 10px;">Brand Guidelines v2.0 | Last updated: October 2024</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault()
+                var target = document.querySelector(this.getAttribute('href'))
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    })
+                }
+            })
+        })
+
+        // Add interactive color value copying
+        document.querySelectorAll('.color-values').forEach(function(element) {
+            element.style.cursor = 'pointer'
+            element.title = 'Click to copy color values'
+
+            element.addEventListener('click', function() {
+                var text = this.textContent.trim()
+                var hexMatch = text.match(/HEX: (#[A-Fa-f0-9]{6}|#[A-Fa-f0-9]{3})/)
+
+                if (hexMatch && navigator.clipboard) {
+                    var hex = hexMatch[1]
+                    navigator.clipboard.writeText(hex).then(function() {
+                        var originalHTML = element.innerHTML
+                        element.innerHTML = '<strong style="color: #00BF8F;">✓ Copied ' + hex + ' to clipboard!</strong>'
+                        setTimeout(function() {
+                            element.innerHTML = originalHTML
+                        }, 2000)
+                    })
+                }
+            })
+        })
+
+        // Show copied overlay
+        function showCopiedOverlay(containerId, textareaId) {
+            var container = document.getElementById(containerId)
+            var textarea = document.getElementById(textareaId)
+
+            // Create overlay
+            var overlay = document.createElement('div')
+            overlay.style.position = 'absolute'
+            overlay.style.top = '50%'
+            overlay.style.left = '50%'
+            overlay.style.transform = 'translate(-50%, -50%)'
+            overlay.style.background = '#00BF8F'
+            overlay.style.color = '#fff'
+            overlay.style.padding = '15px 30px'
+            overlay.style.fontSize = '18px'
+            overlay.style.fontWeight = '700'
+            overlay.style.borderRadius = '0'
+            overlay.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)'
+            overlay.style.zIndex = '1000'
+            overlay.textContent = 'Copied!'
+
+            container.appendChild(overlay)
+
+            // Flash textarea
+            textarea.style.borderColor = '#00BF8F'
+            textarea.style.background = '#f0fff0'
+
+            // Remove after animation
+            setTimeout(function() {
+                container.removeChild(overlay)
+                textarea.style.borderColor = '#ccc'
+                textarea.style.background = '#fff'
+            }, 1500)
+        }
+
+        // Copy markdown guidelines to clipboard
+        function copyMarkdown() {
+            var textarea = document.getElementById('markdown-guidelines')
+            textarea.select()
+            textarea.setSelectionRange(0, 99999) // For mobile devices
+
+            navigator.clipboard.writeText(textarea.value).then(function() {
+                showCopiedOverlay('markdown-container', 'markdown-guidelines')
+            }).catch(function(err) {
+                alert('Failed to copy: ' + err)
+            })
+        }
+
+        // Copy AI prompt to clipboard
+        function copyPrompt(promptId) {
+            var textarea = document.getElementById(promptId)
+            textarea.select()
+            textarea.setSelectionRange(0, 99999) // For mobile devices
+
+            navigator.clipboard.writeText(textarea.value).then(function() {
+                showCopiedOverlay(promptId + '-container', promptId)
+            }).catch(function(err) {
+                alert('Failed to copy: ' + err)
+            })
+        }
+
+        // Log page load
+        console.log('%cSecond Home Brand Guidelines', 'color: #00BF8F; font-size: 24px; font-weight: bold')
+        console.log('%cBuilt with Arial typography and clean, modern design principles', 'color: #333; font-size: 14px')
+        console.log('%cVersion 2.0 - Updated with verified colors and fonts from actual CSS files', 'color: #999; font-size: 12px')
+    </script>
+</body>
+</html>

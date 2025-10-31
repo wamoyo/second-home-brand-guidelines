@@ -1,0 +1,33 @@
+SECOND HOME - ACTUAL COLORS FROM CSS FILES
+==========================================
+
+PRIMARY BRAND COLORS:
+- #00BF8F / #00bf8f - Sage Green (primary brand color)
+- #b3503e - Russet Red (secondary buttons, accents)
+
+NEUTRALS:
+- #333 / #333333 - Charcoal (headers, primary text)
+- #000 / #000000 - Black (footer, copyright)
+- #232323 - Near Black (text shadows)
+- #fff - White (backgrounds, text on dark)
+
+GRAYS:
+- #f7f7f7 - Light Gray (section backgrounds)
+- #efefef - Off-White Gray (form backgrounds)
+- #eee / #eeeeee - Very Light Gray (disabled states)
+- #dddddd - Lighter Gray (buttons)
+- #ccc - Medium Gray (borders, placeholders)
+- #999 - Dark Gray (secondary text, footer)
+
+ACCENT/UTILITY:
+- #f90 - Orange (error messages)
+- rgba(0,0,0,0.2) - Black 20% (homepage header overlay)
+- rgba(0,0,0,0.4) - Black 40% (search widget overlay)
+- rgba(0,0,0,0.5) - Black 50% (hero overlays)
+- rgba(0,0,0,0.65) - Black 65% (gradient overlays)
+- rgba(0,0,0,0.8) - Black 80% (fixed header overlay)
+
+FONTS:
+- Body: Arial, Helvetica, sans-serif
+- Fallback: sans-serif
+- NOTE: Work Sans was commented out/overridden in style.css
