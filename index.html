@@ -477,6 +477,104 @@
         .mb-20 {
             margin-bottom: 20px;
         }
+
+        /* Floating Navigation */
+        .nav-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+
+        .nav-button {
+            background: #00BF8F;
+            color: #fff;
+            border: none;
+            padding: 15px 25px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            border-radius: 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-button:hover {
+            background: #00a077;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+        }
+
+        .nav-button svg {
+            width: 20px;
+            height: 20px;
+            fill: #fff;
+        }
+
+        .nav-dropdown {
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            background: #fff;
+            border: 2px solid #00BF8F;
+            min-width: 280px;
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .nav-dropdown.active {
+            max-height: 600px;
+            opacity: 1;
+        }
+
+        .nav-dropdown a {
+            display: block;
+            padding: 12px 20px;
+            color: #333;
+            text-decoration: none;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 15px;
+            border-bottom: 1px solid #efefef;
+            transition: all 0.2s;
+        }
+
+        .nav-dropdown a:last-child {
+            border-bottom: none;
+        }
+
+        .nav-dropdown a:hover {
+            background: #00BF8F;
+            color: #fff;
+            padding-left: 25px;
+        }
+
+        @media (max-width: 768px) {
+            .nav-float {
+                bottom: 20px;
+                right: 20px;
+            }
+
+            .nav-button {
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+
+            .nav-dropdown {
+                min-width: 240px;
+                bottom: 60px;
+            }
+
+            .nav-dropdown a {
+                font-size: 14px;
+                padding: 10px 15px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -490,7 +588,7 @@
     </section>
 
     <!-- Brand Overview -->
-    <section class="section">
+    <section id="overview" class="section">
         <div class="container">
             <h2>Brand Overview</h2>
             <p class="text-center" style="max-width: 800px; margin: 0 auto;">Second Home Vacation Rentals provides professional vacation rental management in Colorado's Rocky Mountain region. Our brand reflects the natural beauty of the mountains, the warmth of a home away from home, and our commitment to exceptional service.</p>
@@ -894,7 +992,7 @@
     </section>
 
     <!-- Photography Guidelines -->
-    <section class="section section--dark">
+    <section id="photography" class="section section--dark">
         <div class="container">
             <h2 style="color: #b3503e;">Photography Guidelines</h2>
 
@@ -927,7 +1025,7 @@
     </section>
 
     <!-- Image Usage -->
-    <section class="section">
+    <section id="images" class="section">
         <div class="container">
             <h2>Image Usage</h2>
 
@@ -1003,7 +1101,7 @@
     </section>
 
     <!-- Design Principles -->
-    <section class="section">
+    <section id="principles" class="section">
         <div class="container">
             <h2>Design Principles</h2>
 
@@ -1042,7 +1140,7 @@
     </section>
 
     <!-- Tone of Voice -->
-    <section class="section section--gray">
+    <section id="voice" class="section section--gray">
         <div class="container">
             <h2>Tone of Voice</h2>
 
@@ -1070,7 +1168,7 @@
     </section>
 
     <!-- Do's and Don'ts -->
-    <section class="section">
+    <section id="guidelines" class="section">
         <div class="container">
             <h2>Brand Guidelines Do's & Don'ts</h2>
 
@@ -1119,11 +1217,11 @@
     </section>
 
     <!-- AI Tools & Export -->
-    <section class="section section--gray">
+    <section id="ai-tools" class="section section--gray">
         <div class="container">
             <h2>AI Tools & Export</h2>
 
-            <h3 class="mt-40">Full Brand Guidelines (Markdown)</h3>
+            <h3 class="mt-40 text-center">Full Brand Guidelines (Markdown)</h3>
             <p class="text-center" style="max-width: 800px; margin: 0 auto 30px auto;">Click anywhere in the text below to copy the complete brand guidelines. Perfect for pasting into AI tools like ChatGPT, Claude, or other design assistants.</p>
 
             <div id="markdown-container" style="position: relative;">
@@ -1318,7 +1416,7 @@ Prioritize usability. Clear CTAs, intuitive navigation, and accessible design fo
                 </textarea>
             </div>
 
-            <h3 class="mt-40">AI Image Generation Prompts</h3>
+            <h3 class="mt-40 text-center">AI Image Generation Prompts</h3>
             <p class="text-center" style="max-width: 800px; margin: 0 auto 30px auto;">Click any prompt below to copy it. Use these in AI image generators like DALL-E, Midjourney, Stable Diffusion, or Adobe Firefly to create on-brand imagery.</p>
 
             <div class="grid grid-2">
@@ -1367,6 +1465,29 @@ Prioritize usability. Clear CTAs, intuitive navigation, and accessible design fo
         </div>
     </section>
 
+    <!-- Floating Navigation -->
+    <div class="nav-float">
+        <div class="nav-dropdown" id="navDropdown">
+            <a href="#overview">Brand Overview</a>
+            <a href="#colors">Color Palette</a>
+            <a href="#typography">Typography</a>
+            <a href="#logo">Logo Usage</a>
+            <a href="#components">UI Components</a>
+            <a href="#photography">Photography Guidelines</a>
+            <a href="#images">Image Usage</a>
+            <a href="#principles">Design Principles</a>
+            <a href="#voice">Tone of Voice</a>
+            <a href="#guidelines">Do's & Don'ts</a>
+            <a href="#ai-tools">AI Tools & Export</a>
+        </div>
+        <button class="nav-button" id="navButton" onclick="toggleNav()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+            </svg>
+            <span>Navigate</span>
+        </button>
+    </div>
+
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
@@ -1376,6 +1497,29 @@ Prioritize usability. Clear CTAs, intuitive navigation, and accessible design fo
     </footer>
 
     <script>
+        // Toggle navigation dropdown
+        function toggleNav() {
+            var dropdown = document.getElementById('navDropdown')
+            dropdown.classList.toggle('active')
+        }
+
+        // Close navigation when clicking outside
+        document.addEventListener('click', function(event) {
+            var navFloat = document.querySelector('.nav-float')
+            var dropdown = document.getElementById('navDropdown')
+
+            if (!navFloat.contains(event.target)) {
+                dropdown.classList.remove('active')
+            }
+        })
+
+        // Close navigation when a link is clicked
+        document.querySelectorAll('.nav-dropdown a').forEach(function(link) {
+            link.addEventListener('click', function() {
+                document.getElementById('navDropdown').classList.remove('active')
+            })
+        })
+
         // Smooth scroll for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
             anchor.addEventListener('click', function(e) {
