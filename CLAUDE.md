@@ -26,21 +26,63 @@ Create comprehensive brand guidelines website documenting:
 
 **Deliverable:** Single-page HTML brand guidelines with interactive features
 
-### Phase 2: Revenue Estimator Tool (IN PROGRESS)
+### Phase 2: Revenue Estimator Tool (SLIDE-BASED INPUT COMPLETE)
 Build automated revenue estimation tool for prospective property owners to:
 - Estimate earning potential based on property details
-- Collect lead information (email, phone, SMS opt-in)
+- Collect lead information (email, phone)
 - Demonstrate Second Home's market expertise
 - Replace manual estimation process
 - Integrate with website
 
-**Deliverable:** Form interface + backend estimation system
+**Status:** Input form complete (slide-based chosen), output mockup pending
+**Deliverable:** Slide-based form interface + backend estimation system + output design
 
 ---
 
 ## Completed Work
 
-### 1. Brand Guidelines Website (`index.html`)
+### 1. Revenue Estimator Options - Input Forms (4 Mockups Created)
+
+**Decision:** Client selected **Slide-Based Estimator** as primary approach
+
+#### Slide-Based Revenue Estimator (`slide-estimator.html`) - SELECTED ✓
+**Status:** Input form complete, ready for output mockup
+
+**Features:**
+- **7 slides total:** Contact → Property Type → Location → Details → Quality → Amenities/Additional → Thank You
+- **Progress bar:** 6 steps (excludes thank you page)
+- **Mobile-optimized:** Minimal padding, clean spacing, readable progress steps
+- **Half-star ratings:** Click left/right side of star for 0.5 increments (1.0 to 5.0)
+- **Park County focus:** Autocomplete + interactive SVG map (Highway 9 corridor)
+- **Quality assessment:** Star rating OR photo upload (3-10 images)
+- **Privacy notice:** Clear statement about email usage on first slide
+- **No SMS:** Client removed SMS opt-in (company no longer uses)
+
+**Slide Details:**
+1. **Contact Info** - Name, email, phone + privacy notice
+2. **Property Type** - Visual cards (Cabin, House, Condo, Chalet, Townhome, Lodge)
+3. **Location** - Single input with Park County autocomplete + clickable map
+4. **Property Details** - Bedrooms, bathrooms, guest capacity, square footage
+5. **Quality Assessment** - Star rating (with half-stars) OR photo upload
+6. **Amenities & Additional** - Checkboxes for 12 amenities + free-text field
+7. **Thank You** - Submission confirmation + company info
+
+**Technical Implementation:**
+- All JavaScript interactions work (star ratings, photo upload, map clicks, autocomplete)
+- Form data collected client-side (ready for backend integration)
+- Brand-compliant styling throughout
+- Smooth animations and transitions
+
+**Next Phase:** Design output/results page that will be emailed to property owners
+
+#### Alternative Estimator Mockups (Demoted but Available)
+- **Form-Based** (`revenue-estimator.html`) - Traditional multi-section form
+- **Chat-Based** (`chat-estimator.html`) - Conversational interface
+- **Interactive** (`interactive-estimator.html`) - Real-time calculator with sliders/toggles
+
+All available via gray "Alternative" buttons on index.html
+
+### 2. Brand Guidelines Website (`index.html`)
 
 **Features:**
 - Single-page HTML with all CSS/JS inline (no external dependencies except Google Fonts)
@@ -71,63 +113,30 @@ Build automated revenue estimation tool for prospective property owners to:
 - Smooth scrolling to sections
 - Centered "Copied!" overlay feedback
 
-### 2. Revenue Estimator Form (`revenue-estimator.html`)
+### 3. Key Decisions Made (Phase 2)
 
-**Purpose:** Collect property information from prospective owners and deliver personalized revenue estimates
+**Estimator Selection:**
+- Created 4 different approaches for client review
+- Client selected slide-based (one question at a time, progress bar)
+- Demoted other 3 to "Alternative" options
 
-**Form Sections:**
-1. **Contact Information**
-   - First/Last Name
-   - Email (required - for estimate delivery)
-   - Phone (with auto-formatting)
+**Input Form Decisions:**
+1. **Privacy First:** Added clear privacy notice on first slide
+2. **Local Focus:**
+   - Park County-specific locations (Alma, Fairplay, Blue River, etc.)
+   - Interactive Highway 9 corridor map
+   - Only serves areas within Second Home's service region
+3. **Quality Options:** Property owners choose star rating OR upload photos
+4. **No SMS:** Removed SMS opt-in (company policy change)
+5. **Combined Slides:** Merged amenities + additional info to reduce steps
+6. **Simplified Progress:** 6-step progress bar (excludes thank you page)
+7. **Mobile Optimization:** Removed unnecessary containers/padding
 
-2. **Property Location**
-   - Street address
-   - City
-   - Zip code
-
-3. **Property Details**
-   - Property type (cabin, house, condo, chalet, townhome, lodge)
-   - Square footage (optional)
-   - Bedrooms (1-6+)
-   - Bathrooms (1-4+)
-   - Maximum guest capacity
-
-4. **Amenities & Features** (multi-select checkboxes)
-   - Hot Tub, Game Room, Media Room
-   - Fireplace, Mountain Views, Deck/Patio
-   - Garage/Parking, WiFi, Washer/Dryer, Kitchen
-   - Pet Friendly, Ski In/Out
-
-5. **Property Photos**
-   - Drag-and-drop or click upload
-   - 3-10 photos recommended
-   - File preview with individual remove
-   - Purpose: AI-based quality assessment
-
-6. **Additional Information**
-   - Free-text area for special features
-
-7. **SMS Opt-in**
-   - Checkbox with legal disclaimer
-   - Matches Second Home's existing SMS practices
-
-**Features:**
-- Phone number auto-formatting: (970) 555-1234
-- Drag-and-drop photo upload
-- File management (preview, remove individual files)
-- Form validation
-- Brand-compliant design throughout
-- "How It Works" 3-step process explanation
-- "Why Second Home?" benefits section
-- Responsive layout
-
-**User Journey:**
-1. Fill out property details
-2. Upload photos
-3. Submit form
-4. Receive email estimate within 10 minutes
-5. Business captures lead (email + optional SMS)
+**Technical Approach:**
+- Client-side form data collection
+- Ready for backend integration
+- Email-based delivery (no in-app results display)
+- Thank you page after submission with company info
 
 ### 3. Supporting Documentation
 
@@ -581,16 +590,37 @@ brand-guidelines/
 
 ---
 
-## Next Steps: Revenue Estimator Backend
+## Next Steps: Revenue Estimator - Output Design & Backend
 
 ### Current Status
-✅ Form interface completed (`revenue-estimator.html`)
-✅ All input fields designed and functional
-✅ Photo upload with drag-and-drop
-✅ SMS opt-in included
-✅ Brand-compliant design
+✅ Slide-based input form completed (`slide-estimator.html`)
+✅ All interactive features working (star ratings, map, photo upload, autocomplete)
+✅ Brand-compliant design and mobile-optimized
+✅ Client approved approach
+⏳ Output/results mockup - NEXT TASK
+⏳ Backend implementation - FUTURE
 
-### Remaining Work
+### Immediate Next Task: Output Design
+Design the email/PDF that property owners will receive with their revenue estimate.
+
+**Requirements to Consider:**
+- Brand-compliant design (colors, typography, sharp corners)
+- Revenue estimate (annual projected revenue)
+- Revenue range (low/high estimates)
+- Seasonal breakdown (winter, spring, summer, fall)
+- How estimate was calculated (transparency)
+- Comparison to similar properties
+- What's included in Second Home's service
+- Next steps / call to action
+- Contact information
+- Professional yet approachable tone
+
+**Format Options:**
+- HTML email (styled, can be viewed in browser)
+- PDF attachment
+- Both (email with embedded content + PDF)
+
+### Remaining Backend Work
 
 **Backend Development Needed:**
 1. **Data Collection & Storage**
