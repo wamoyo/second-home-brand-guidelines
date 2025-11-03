@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Slide Revenue Estimator - Second Home Vacation Rentals</title>
+
+    <!-- Leaflet.js CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin=""/>
+
     <style>
         /* Reset & Base Styles */
         * {
@@ -449,8 +455,9 @@
             border-top: none;
             max-height: 200px;
             overflow-y: auto;
-            z-index: 100;
+            z-index: 9999;
             display: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
 
         .location-suggestions.active {
@@ -473,11 +480,36 @@
             margin: 20px 0;
             border: 2px solid #ccc;
             background: #f7f7f7;
+            height: 500px;
+            position: relative;
         }
 
-        .location-map {
+        #propertyMap {
             width: 100%;
-            height: auto;
+            height: 100%;
+            border-radius: 0;
+        }
+
+        /* Custom marker styles */
+        .custom-marker {
+            background-color: #00BF8F;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 3px solid #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        /* Make map attribution smaller and less obtrusive */
+        .leaflet-control-attribution {
+            font-size: 8px !important;
+            opacity: 0.5;
+            background: rgba(255, 255, 255, 0.7) !important;
+            padding: 2px 4px !important;
+        }
+
+        .leaflet-control-attribution:hover {
+            opacity: 0.8;
         }
 
         .map-marker {
@@ -814,27 +846,7 @@
                     </div>
 
                     <div class="map-container">
-                        <svg viewBox="0 0 400 600" class="location-map">
-                            <!-- Highway 9 -->
-                            <line x1="200" y1="50" x2="200" y2="550" stroke="#666" stroke-width="4" stroke-dasharray="10,5"/>
-
-                            <!-- Breckenridge (North) -->
-                            <circle cx="200" cy="80" r="12" fill="#b3503e" class="map-marker" onclick="selectLocation('Breckenridge, CO', 200, 80)"/>
-                            <text x="200" y="65" text-anchor="middle" font-size="14" font-weight="700" fill="#333">Breckenridge</text>
-
-                            <!-- Blue River -->
-                            <circle cx="200" cy="180" r="8" fill="#00BF8F" class="map-marker" onclick="selectLocation('Blue River, CO', 200, 180)"/>
-                            <text x="220" y="185" font-size="12" fill="#333">Blue River</text>
-
-                            <!-- Alma (Office Location) -->
-                            <circle cx="200" cy="320" r="14" fill="#00BF8F" class="map-marker" onclick="selectLocation('Alma, CO', 200, 320)"/>
-                            <text x="200" y="305" text-anchor="middle" font-size="14" font-weight="700" fill="#333">Alma</text>
-                            <text x="200" y="355" text-anchor="middle" font-size="11" fill="#666">(Main Office)</text>
-
-                            <!-- Fairplay (South) -->
-                            <circle cx="200" cy="480" r="12" fill="#b3503e" class="map-marker" onclick="selectLocation('Fairplay, CO', 200, 480)"/>
-                            <text x="200" y="515" text-anchor="middle" font-size="14" font-weight="700" fill="#333">Fairplay</text>
-                        </svg>
+                        <div id="propertyMap"></div>
                     </div>
 
                     <div class="slide-navigation">
@@ -1058,16 +1070,14 @@
             qualityPhotos: []
         }
 
-        // Park County locations for autocomplete
-        var parkCountyLocations = [
-            'Alma, CO 80420',
-            'Fairplay, CO 80440',
-            'Blue River, CO 80424',
-            'Breckenridge, CO 80424',
-            'Como, CO 80432',
-            'Jefferson, CO 80456',
-            'Highway 9 Corridor, Park County, CO'
-        ]
+        // Address autocomplete data
+        var addresses = []
+        var fuse = null
+        var selectedAddress = null
+
+        // Map variables
+        var map = null
+        var propertyMarker = null
 
         // Initialize progress steps
         function initProgressSteps() {
@@ -1121,6 +1131,13 @@
             currentSlide = slideNumber
             updateProgress()
 
+            // Initialize map when location slide is first shown
+            if (slideNumber === 3 && !map) {
+                setTimeout(function() {
+                    initMap()
+                }, 100)
+            }
+
             // Scroll to top
             window.scrollTo({ top: 0, behavior: 'smooth' })
         }
@@ -1170,37 +1187,143 @@
             }
         }
 
+        // Initialize map
+        function initMap () {
+            // Breckenridge coordinates
+            var breckenridgeCoords = [39.4817, -106.0384]
+
+            // Initialize map centered on Breckenridge
+            map = L.map('propertyMap').setView(breckenridgeCoords, 11)
+
+            // Add OpenStreetMap tiles (100% free, no ads)
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map)
+
+            console.log('Map initialized')
+        }
+
+        // Add marker to map for selected address
+        function addPropertyMarker (lat, lng, address) {
+            // Remove existing marker if any
+            if (propertyMarker) {
+                map.removeLayer(propertyMarker)
+            }
+
+            // Create custom icon
+            var greenIcon = L.divIcon({
+                className: 'custom-marker',
+                iconSize: [20, 20],
+                iconAnchor: [10, 10],
+                popupAnchor: [0, -10]
+            })
+
+            // Add new marker
+            propertyMarker = L.marker([lat, lng], { icon: greenIcon }).addTo(map)
+
+            // Add popup with address
+            propertyMarker.bindPopup('<strong>Your Property</strong><br>' + address).openPopup()
+
+            // Pan and zoom to marker
+            map.setView([lat, lng], 14, { animate: true })
+        }
+
+        // Load address data
+        function loadAddresses () {
+            fetch('./park-county-addresses.json')
+                .then(function(response) { return response.json() })
+                .then(function(data) {
+                    addresses = data
+                    initializeAutocomplete()
+                })
+                .catch(function(error) {
+                    console.error('Error loading addresses:', error)
+                })
+        }
+
+        // Initialize autocomplete with Fuse.js
+        function initializeAutocomplete () {
+            fuse = new Fuse(addresses, {
+                keys: [
+                    { name: 'address', weight: 2 },
+                    { name: 'street', weight: 1.5 },
+                    { name: 'number', weight: 1 },
+                    { name: 'city', weight: 1 }
+                ],
+                threshold: 0.4,
+                includeScore: true,
+                minMatchCharLength: 2,
+                distance: 100
+            })
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.form-group')) {
+                    hideLocationSuggestions()
+                }
+            })
+        }
+
         // Location autocomplete
-        function handleLocationInput() {
+        function handleLocationInput () {
             var input = document.getElementById('locationSearch')
             var suggestionsDiv = document.getElementById('locationSuggestions')
-            var query = input.value.toLowerCase()
+            var query = input.value.trim()
 
-            if (query.length === 0) {
-                suggestionsDiv.classList.remove('active')
+            if (query.length < 2 || !fuse) {
+                hideLocationSuggestions()
                 return
             }
 
-            var matches = parkCountyLocations.filter(function(location) {
-                return location.toLowerCase().includes(query)
+            var results = fuse.search(query, { limit: 10 })
+            displayLocationResults(results)
+        }
+
+        // Display location search results
+        function displayLocationResults (results) {
+            var suggestionsDiv = document.getElementById('locationSuggestions')
+
+            if (results.length === 0) {
+                suggestionsDiv.innerHTML = '<div class="location-suggestion-item" style="text-align: center; color: #999; cursor: default;">No addresses found</div>'
+                suggestionsDiv.classList.add('active')
+                return
+            }
+
+            suggestionsDiv.innerHTML = ''
+            results.forEach(function(result) {
+                var addr = result.item
+                var item = document.createElement('div')
+                item.className = 'location-suggestion-item'
+                item.innerHTML = '<div style="font-weight: 700;">' + addr.number + ' ' + addr.street + '</div>' +
+                                '<div style="font-size: 14px; color: #666;">' + addr.city + ', CO ' + addr.postcode + '</div>'
+                item.onclick = function() {
+                    selectLocationAddress(addr)
+                }
+                suggestionsDiv.appendChild(item)
             })
 
-            if (matches.length > 0) {
-                suggestionsDiv.innerHTML = ''
-                matches.forEach(function(location) {
-                    var item = document.createElement('div')
-                    item.className = 'location-suggestion-item'
-                    item.textContent = location
-                    item.onclick = function() {
-                        input.value = location
-                        suggestionsDiv.classList.remove('active')
-                    }
-                    suggestionsDiv.appendChild(item)
-                })
-                suggestionsDiv.classList.add('active')
-            } else {
-                suggestionsDiv.classList.remove('active')
+            suggestionsDiv.classList.add('active')
+        }
+
+        // Select an address from autocomplete
+        function selectLocationAddress (address) {
+            var input = document.getElementById('locationSearch')
+            input.value = address.number + ' ' + address.street + ', ' + address.city + ', CO ' + address.postcode
+            selectedAddress = address
+            hideLocationSuggestions()
+
+            // Add marker to map if coordinates exist
+            if (address.coordinates && address.coordinates.lat && address.coordinates.lng) {
+                var displayAddress = address.number + ' ' + address.street + '<br>' + address.city + ', CO ' + address.postcode
+                addPropertyMarker(address.coordinates.lat, address.coordinates.lng, displayAddress)
             }
+        }
+
+        // Hide location suggestions
+        function hideLocationSuggestions () {
+            var suggestionsDiv = document.getElementById('locationSuggestions')
+            suggestionsDiv.classList.remove('active')
         }
 
         // Select location from map
@@ -1344,7 +1467,17 @@
             initProgressSteps()
             updateProgress()
             initStarRating()
+            loadAddresses()
+            // Map will initialize when user reaches slide 3
         }
     </script>
+
+    <!-- Fuse.js for address autocomplete -->
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0"></script>
+
+    <!-- Leaflet.js -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
 </body>
 </html>
