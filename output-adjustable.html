@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adjustable Revenue Estimate - Second Home Vacation Rentals</title>
+    <style>
+        /* Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: 300;
+            font-size: 16px;
+            line-height: 1.75;
+            color: #333;
+            background-color: #f7f7f7;
+        }
+
+        /* Layout */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><rect fill="%23333" width="1200" height="600"/><polygon fill="%23444" points="0,600 400,200 800,400 1200,100 1200,600"/><polygon fill="%23555" points="0,600 300,300 600,450 900,250 1200,350 1200,600"/></svg>');
+            background-size: cover;
+            background-position: center;
+            padding: 40px 0;
+            text-align: center;
+            color: #fff;
+        }
+
+        .header-logo {
+            max-width: 300px;
+            width: 100%;
+            height: auto;
+            filter: brightness(0) invert(1);
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 300;
+            margin: 0;
+        }
+
+        /* Main Section */
+        .main-section {
+            background: #fff;
+            padding: 60px 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-top: -20px;
+        }
+
+        .intro-text {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .intro-text h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #b3503e;
+            margin-bottom: 15px;
+        }
+
+        .intro-text p {
+            font-size: 16px;
+            color: #666;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Two Column Layout */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        /* Left Column - Revenue Display */
+        .revenue-display {
+            background: #f7f7f7;
+            padding: 40px 30px;
+            text-align: center;
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+
+        .revenue-label {
+            font-size: 16px;
+            color: #999;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 700;
+        }
+
+        .revenue-amount {
+            font-size: 64px;
+            font-weight: 700;
+            color: #00BF8F;
+            line-height: 1;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .revenue-period {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .revenue-change {
+            font-size: 18px;
+            font-weight: 700;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #efefef;
+        }
+
+        .revenue-change.positive {
+            color: #00BF8F;
+        }
+
+        .revenue-change.negative {
+            color: #b3503e;
+        }
+
+        .baseline-note {
+            font-size: 14px;
+            color: #999;
+            margin-top: 15px;
+        }
+
+        /* Right Column - Controls */
+        .controls-panel {
+            padding: 0;
+        }
+
+        .control-block {
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid #efefef;
+        }
+
+        .control-block:last-child {
+            border-bottom: none;
+        }
+
+        .control-block h3 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #b3503e;
+            margin-bottom: 15px;
+        }
+
+        .control-block p {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        /* Star Rating Control */
+        .star-rating-control {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stars-display {
+            font-size: 32px;
+            color: #f90;
+        }
+
+        .rating-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .star-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .star-btn {
+            padding: 10px 20px;
+            background: #efefef;
+            color: #333;
+            border: none;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .star-btn:hover {
+            background: #00BF8F;
+            color: #fff;
+        }
+
+        /* Range Slider */
+        .range-slider {
+            width: 100%;
+            margin: 20px 0;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            background: #efefef;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            background: #00BF8F;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            background: #00BF8F;
+            cursor: pointer;
+            border: none;
+        }
+
+        /* Toggle Switches */
+        .toggle-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .toggle-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: #f7f7f7;
+            transition: all 0.3s;
+        }
+
+        .toggle-item.active {
+            background: #e6f9f4;
+        }
+
+        .toggle-label {
+            font-size: 16px;
+            color: #333;
+            font-weight: 400;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toggle-impact {
+            font-size: 12px;
+            color: #00BF8F;
+            font-weight: 700;
+        }
+
+        /* Toggle Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 56px;
+            height: 28px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .3s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .3s;
+        }
+
+        input:checked + .slider {
+            background-color: #00BF8F;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(28px);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: #fff;
+            padding: 50px 20px 60px 20px;
+            text-align: center;
+            border-top: 2px solid #efefef;
+            margin-top: 40px;
+        }
+
+        .cta-section h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .cta-section p {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 15px 40px;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 700;
+            transition: all 0.3s;
+            margin: 0 10px 10px 10px;
+        }
+
+        .cta-button-primary {
+            background: #00BF8F;
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(0,191,143,0.3);
+        }
+
+        .cta-button-primary:hover {
+            background: #00a077;
+            box-shadow: 0 6px 16px rgba(0,191,143,0.4);
+            transform: translateY(-2px);
+        }
+
+        .cta-button-secondary {
+            background: transparent;
+            color: #333;
+            border: 2px solid #333;
+        }
+
+        .cta-button-secondary:hover {
+            background: #333;
+            color: #fff;
+        }
+
+        /* Footer */
+        .footer {
+            background: #000;
+            color: #999;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        .footer p {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .revenue-display {
+                position: static;
+            }
+
+            .revenue-amount {
+                font-size: 48px;
+            }
+
+            .star-rating-control {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="container">
+            <img src="logo-charcoal-500.png" alt="Second Home Vacation Rentals" class="header-logo">
+            <h1>Adjustable Revenue Estimate</h1>
+        </div>
+    </div>
+
+    <!-- Main Section -->
+    <div class="main-section">
+        <div class="container">
+            <div class="intro-text">
+                <h2>See How Property Features Impact Your Revenue</h2>
+                <p>Adjust the settings below to see how quality, amenities, and pet-friendliness affect your earning potential. This interactive tool helps you understand what drives revenue for your property.</p>
+            </div>
+
+            <div class="content-grid">
+                <!-- Left Column - Revenue Display -->
+                <div class="revenue-display">
+                    <div class="revenue-label">Estimated Annual Revenue</div>
+                    <div class="revenue-amount" id="revenueAmount">$87,500</div>
+                    <div class="revenue-period">Per Year</div>
+                    <div class="revenue-change" id="revenueChange"></div>
+                    <div class="baseline-note">Base estimate: $87,500</div>
+                </div>
+
+                <!-- Right Column - Controls -->
+                <div class="controls-panel">
+
+                    <!-- Quality Rating -->
+                    <div class="control-block">
+                        <h3>Property Quality Rating</h3>
+                        <p>Higher quality properties command premium rates and attract more bookings.</p>
+
+                        <div class="star-rating-control">
+                            <div class="stars-display" id="starsDisplay">★★★★★</div>
+                            <div class="rating-value" id="ratingValue">4.5 stars</div>
+                        </div>
+
+                        <div class="range-slider">
+                            <input type="range" id="qualitySlider" min="1" max="5" step="0.5" value="4.5">
+                        </div>
+
+                        <div class="star-buttons">
+                            <button class="star-btn" onclick="adjustQuality(-0.5)">− 0.5</button>
+                            <button class="star-btn" onclick="adjustQuality(0.5)">+ 0.5</button>
+                        </div>
+                    </div>
+
+                    <!-- Pet Friendly -->
+                    <div class="control-block">
+                        <h3>Pet Friendly</h3>
+                        <p>Pet-friendly properties expand your market and can increase bookings by 15-25%.</p>
+
+                        <div class="toggle-list">
+                            <div class="toggle-item" id="petToggleItem">
+                                <div class="toggle-label">
+                                    <span>🐾 Allow Pets</span>
+                                    <span class="toggle-impact">+15% revenue</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="petToggle" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Amenities -->
+                    <div class="control-block">
+                        <h3>Premium Amenities</h3>
+                        <p>Premium amenities justify higher nightly rates and improve guest satisfaction.</p>
+
+                        <div class="toggle-list">
+                            <div class="toggle-item active" id="hotTubItem">
+                                <div class="toggle-label">
+                                    <span>🛁 Hot Tub</span>
+                                    <span class="toggle-impact">+12% revenue</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="hotTubToggle" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="toggle-item active" id="wifiItem">
+                                <div class="toggle-label">
+                                    <span>📶 High-Speed WiFi</span>
+                                    <span class="toggle-impact">+5% revenue</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="wifiToggle" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="toggle-item" id="washerItem">
+                                <div class="toggle-label">
+                                    <span>🧺 Washer/Dryer</span>
+                                    <span class="toggle-impact">+6% revenue</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="washerToggle">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="toggle-item" id="deckItem">
+                                <div class="toggle-label">
+                                    <span>🌲 Large Deck/Patio</span>
+                                    <span class="toggle-impact">+7% revenue</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="deckToggle">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- CTA Section -->
+            <div class="cta-section">
+                <h2>Ready to Maximize Your Property's Potential?</h2>
+                <p>Let's discuss how Second Home can help you achieve these revenue goals with our full-service vacation rental management.</p>
+                <a href="https://www.secondhomevacationrentals.com/home-owners/" class="cta-button cta-button-primary">List Your Property on Second Home</a>
+                <a href="https://calendly.com/secondhomevacationrentals" class="cta-button cta-button-secondary">Book A Meeting With Us To Learn More</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="container">
+            <p>&copy; 2024 Second Home Vacation Rentals. All rights reserved.</p>
+            <p style="margin-top: 10px;">Professional Property Management in Colorado's Rocky Mountains</p>
+        </div>
+    </div>
+
+    <script>
+        // Base revenue
+        var baseRevenue = 87500
+
+        // Current values
+        var currentQuality = 4.5
+        var isPetFriendly = true
+        var amenities = {
+            hotTub: true,
+            wifi: true,
+            washer: false,
+            deck: false
+        }
+
+        // Revenue impacts (percentages)
+        var qualityImpact = {
+            1.0: -30,
+            1.5: -25,
+            2.0: -20,
+            2.5: -15,
+            3.0: -10,
+            3.5: -5,
+            4.0: 0,
+            4.5: 5,
+            5.0: 15
+        }
+
+        var amenityImpact = {
+            pet: 15,
+            hotTub: 12,
+            wifi: 5,
+            washer: 6,
+            deck: 7
+        }
+
+        // Calculate revenue
+        function calculateRevenue() {
+            var qualityMultiplier = 1 + (qualityImpact[currentQuality] / 100)
+            var amenityMultiplier = 1
+
+            if (isPetFriendly) {
+                amenityMultiplier += amenityImpact.pet / 100
+            }
+
+            if (amenities.hotTub) amenityMultiplier += amenityImpact.hotTub / 100
+            if (amenities.wifi) amenityMultiplier += amenityImpact.wifi / 100
+            if (amenities.washer) amenityMultiplier += amenityImpact.washer / 100
+            if (amenities.deck) amenityMultiplier += amenityImpact.deck / 100
+
+            return Math.round(baseRevenue * qualityMultiplier * amenityMultiplier)
+        }
+
+        // Update display
+        function updateDisplay() {
+            var newRevenue = calculateRevenue()
+            var difference = newRevenue - baseRevenue
+            var percentChange = ((difference / baseRevenue) * 100).toFixed(1)
+
+            document.getElementById('revenueAmount').textContent = '$' + newRevenue.toLocaleString()
+
+            var changeElement = document.getElementById('revenueChange')
+            if (difference > 0) {
+                changeElement.textContent = '+$' + difference.toLocaleString() + ' (' + percentChange + '% increase)'
+                changeElement.className = 'revenue-change positive'
+            } else if (difference < 0) {
+                changeElement.textContent = '-$' + Math.abs(difference).toLocaleString() + ' (' + Math.abs(percentChange) + '% decrease)'
+                changeElement.className = 'revenue-change negative'
+            } else {
+                changeElement.textContent = 'Baseline estimate'
+                changeElement.className = 'revenue-change'
+            }
+        }
+
+        // Update star display
+        function updateStars() {
+            var fullStars = Math.floor(currentQuality)
+            var hasHalfStar = currentQuality % 1 !== 0
+            var emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0)
+
+            var starsHTML = '★'.repeat(fullStars)
+            if (hasHalfStar) {
+                starsHTML += '⯨'
+            }
+            starsHTML += '☆'.repeat(emptyStars)
+
+            document.getElementById('starsDisplay').textContent = starsHTML
+            document.getElementById('ratingValue').textContent = currentQuality.toFixed(1) + ' stars'
+        }
+
+        // Quality slider
+        var qualitySlider = document.getElementById('qualitySlider')
+        qualitySlider.addEventListener('input', function() {
+            currentQuality = parseFloat(this.value)
+            updateStars()
+            updateDisplay()
+        })
+
+        // Adjust quality buttons
+        function adjustQuality(amount) {
+            var newQuality = currentQuality + amount
+            if (newQuality >= 1 && newQuality <= 5) {
+                currentQuality = newQuality
+                document.getElementById('qualitySlider').value = currentQuality
+                updateStars()
+                updateDisplay()
+            }
+        }
+
+        // Pet toggle
+        document.getElementById('petToggle').addEventListener('change', function() {
+            isPetFriendly = this.checked
+            var item = document.getElementById('petToggleItem')
+            if (this.checked) {
+                item.classList.add('active')
+            } else {
+                item.classList.remove('active')
+            }
+            updateDisplay()
+        })
+
+        // Amenity toggles
+        function setupAmenityToggle(toggleId, itemId, amenityKey) {
+            document.getElementById(toggleId).addEventListener('change', function() {
+                amenities[amenityKey] = this.checked
+                var item = document.getElementById(itemId)
+                if (this.checked) {
+                    item.classList.add('active')
+                } else {
+                    item.classList.remove('active')
+                }
+                updateDisplay()
+            })
+        }
+
+        setupAmenityToggle('hotTubToggle', 'hotTubItem', 'hotTub')
+        setupAmenityToggle('wifiToggle', 'wifiItem', 'wifi')
+        setupAmenityToggle('washerToggle', 'washerItem', 'washer')
+        setupAmenityToggle('deckToggle', 'deckItem', 'deck')
+
+        // Initialize
+        updateStars()
+        updateDisplay()
+    </script>
+</body>
+</html>
