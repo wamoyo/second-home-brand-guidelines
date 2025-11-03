@@ -148,9 +148,7 @@
         .slide {
             display: none;
             animation: slideIn 0.3s ease-in;
-            background: #fff;
-            padding: 40px 30px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            padding: 20px 0;
         }
 
         .slide.active {
@@ -656,7 +654,7 @@
             }
 
             .slide {
-                padding: 30px 20px;
+                padding: 20px 0;
             }
 
             h2 {
@@ -926,7 +924,7 @@
                     </div>
                 </div>
 
-                <!-- Slide 6: Amenities -->
+                <!-- Slide 6: Amenities & Additional Info -->
                 <div class="slide" data-slide="6">
                     <h2>Amenities & Features</h2>
                     <p class="slide-description">Select all amenities that apply to your property:</p>
@@ -982,17 +980,7 @@
                         </div>
                     </div>
 
-                    <div class="slide-navigation">
-                        <button class="button button-secondary" onclick="prevSlide()">← Previous</button>
-                        <button class="button button-primary" onclick="nextSlide()">Next →</button>
-                    </div>
-                </div>
-
-                <!-- Slide 7: Additional Info -->
-                <div class="slide" data-slide="7">
-                    <h2>Additional Information</h2>
-                    <p class="slide-description">Any other details we should know?</p>
-
+                    <h3 style="margin-top: 30px;">Additional Information</h3>
                     <div class="form-group">
                         <label for="additionalInfo">Special Features <span class="optional">(optional)</span></label>
                         <textarea id="additionalInfo" placeholder="Recent renovations, proximity to attractions, unique features, etc."></textarea>
@@ -1008,8 +996,8 @@
                     </div>
                 </div>
 
-                <!-- Slide 8: Thank You -->
-                <div class="slide" data-slide="8">
+                <!-- Slide 7: Thank You -->
+                <div class="slide" data-slide="7">
                     <h2>Thank You!</h2>
                     <p class="slide-description">Your revenue estimate request has been submitted successfully.</p>
 
@@ -1062,7 +1050,7 @@
 
     <script>
         var currentSlide = 1
-        var totalSlides = 8
+        var totalSlides = 7
         var formData = {
             propertyType: null,
             amenities: [],
@@ -1084,7 +1072,7 @@
         // Initialize progress steps
         function initProgressSteps() {
             var progressSteps = document.getElementById('progressSteps')
-            var steps = ['Contact', 'Type', 'Location', 'Details', 'Quality', 'Amenities', 'Extra', 'Submit']
+            var steps = ['Contact', 'Type', 'Location', 'Details', 'Quality', 'Amenities']
 
             steps.forEach(function(step, index) {
                 var stepDiv = document.createElement('div')
@@ -1101,15 +1089,18 @@
         function updateProgress() {
             var progressBarFill = document.getElementById('progressBarFill')
             var progressSteps = document.querySelectorAll('.progress-step')
-            var progress = ((currentSlide - 1) / (totalSlides - 1)) * 100
+
+            // Only show progress for slides 1-6 (thank you page is slide 7, not in progress)
+            var progressSlide = Math.min(currentSlide, 6)
+            var progress = ((progressSlide - 1) / 5) * 100
 
             progressBarFill.style.width = progress + '%'
 
             progressSteps.forEach(function(step, index) {
                 step.classList.remove('active', 'completed')
-                if (index + 1 < currentSlide) {
+                if (index + 1 < progressSlide) {
                     step.classList.add('completed')
-                } else if (index + 1 === currentSlide) {
+                } else if (index + 1 === progressSlide) {
                     step.classList.add('active')
                 }
             })
@@ -1339,7 +1330,7 @@
 
             // In production, this would submit to backend
             // For now, just show thank you page
-            showSlide(8)
+            showSlide(7)
         }
 
         // Phone formatting
