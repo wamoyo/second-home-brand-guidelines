@@ -192,6 +192,7 @@
         /* Form Elements */
         .form-group {
             margin-bottom: 30px;
+            position: relative;
         }
 
         label {
@@ -439,33 +440,177 @@
             color: #00BF8F;
         }
 
-        /* SMS Opt-in */
-        .sms-optin {
+        /* Location Autocomplete */
+        .location-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #fff;
+            border: 2px solid #00BF8F;
+            border-top: none;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 100;
+            display: none;
+        }
+
+        .location-suggestions.active {
+            display: block;
+        }
+
+        .location-suggestion-item {
+            padding: 12px;
+            cursor: pointer;
+            border-bottom: 1px solid #f7f7f7;
+            transition: background 0.2s;
+        }
+
+        .location-suggestion-item:hover {
+            background: #f0fff0;
+        }
+
+        /* Map */
+        .map-container {
+            margin: 20px 0;
+            border: 2px solid #ccc;
             background: #f7f7f7;
-            padding: 20px;
-            margin-top: 20px;
-            border-left: 4px solid #00BF8F;
         }
 
-        .sms-optin label {
-            display: flex;
-            align-items: flex-start;
-            font-weight: 400;
+        .location-map {
+            width: 100%;
+            height: auto;
+        }
+
+        .map-marker {
             cursor: pointer;
+            transition: all 0.2s;
         }
 
-        .sms-optin input[type="checkbox"] {
-            width: auto;
-            margin-right: 10px;
-            margin-top: 4px;
+        .map-marker:hover {
+            fill: #b3503e;
+            transform: scale(1.2);
+        }
+
+        /* Star Rating */
+        .star-rating-container {
+            text-align: center;
+            padding: 30px;
+            background: #f7f7f7;
+        }
+
+        .star-rating {
+            font-size: 60px;
+            letter-spacing: 10px;
+        }
+
+        .star {
+            color: #ccc;
             cursor: pointer;
+            transition: all 0.2s;
         }
 
-        .sms-disclaimer {
-            font-size: 12px;
+        .star:hover,
+        .star.active {
+            color: #00BF8F;
+        }
+
+        .star-rating-label {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: 700;
+            color: #666;
+        }
+
+        /* Photo Upload */
+        .photo-upload-area {
+            border: 2px dashed #ccc;
+            padding: 40px;
+            text-align: center;
+            background: #f7f7f7;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .photo-upload-area:hover {
+            border-color: #00BF8F;
+            background: #f0fff0;
+        }
+
+        .photo-upload-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .photo-upload-text {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .photo-upload-hint {
+            font-size: 14px;
             color: #999;
-            margin-top: 10px;
-            line-height: 1.6;
+        }
+
+        .photo-preview-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .photo-preview-item {
+            position: relative;
+            aspect-ratio: 1;
+            border: 2px solid #ccc;
+            overflow: hidden;
+        }
+
+        .photo-preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .photo-preview-remove {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #b3503e;
+            color: #fff;
+            border: none;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .photo-preview-remove:hover {
+            background: #9a4434;
+        }
+
+        /* Thank You Card */
+        .thank-you-card {
+            background: linear-gradient(135deg, #00BF8F 0%, #00a077 100%);
+            color: #fff;
+            padding: 50px;
+            text-align: center;
+        }
+
+        .thank-you-icon {
+            font-size: 80px;
+            width: 100px;
+            height: 100px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px auto;
+            font-weight: 700;
         }
 
         /* Footer */
@@ -568,6 +713,10 @@
                     <h2>Let's Get Started</h2>
                     <p class="slide-description">First, we'll need your contact information so we can send you the detailed estimate.</p>
 
+                    <div class="info-box" style="margin-bottom: 30px;">
+                        <strong>🔒 Your Privacy:</strong> We will use your email for the sole purpose of sending your estimate and never share with third parties.
+                    </div>
+
                     <div class="form-group">
                         <label for="firstName">First Name <span class="required">*</span></label>
                         <input type="text" id="firstName" placeholder="John" required>
@@ -635,21 +784,40 @@
                 <!-- Slide 3: Location -->
                 <div class="slide" data-slide="3">
                     <h2>Property Location</h2>
-                    <p class="slide-description">Where is your property located?</p>
+                    <p class="slide-description">Enter your property address or click on the map below.</p>
 
                     <div class="form-group">
-                        <label for="address">Property Address <span class="required">*</span></label>
-                        <input type="text" id="address" placeholder="123 Mountain View Drive" required>
+                        <label for="locationSearch">Property Address <span class="required">*</span></label>
+                        <input type="text" id="locationSearch" placeholder="Start typing address..." required autocomplete="off" oninput="handleLocationInput()">
+                        <div id="locationSuggestions" class="location-suggestions"></div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="city">City <span class="required">*</span></label>
-                        <input type="text" id="city" placeholder="Fairplay" required>
+                    <div class="info-box" style="margin-bottom: 20px;">
+                        <strong>Service Area:</strong> We serve Park County, Colorado - specifically the Alma and Placer Valley area along Highway 9 between Breckenridge and Fairplay.
                     </div>
 
-                    <div class="form-group">
-                        <label for="zipcode">Zip Code <span class="required">*</span></label>
-                        <input type="text" id="zipcode" placeholder="80440" required>
+                    <div class="map-container">
+                        <svg viewBox="0 0 400 600" class="location-map">
+                            <!-- Highway 9 -->
+                            <line x1="200" y1="50" x2="200" y2="550" stroke="#666" stroke-width="4" stroke-dasharray="10,5"/>
+
+                            <!-- Breckenridge (North) -->
+                            <circle cx="200" cy="80" r="12" fill="#b3503e" class="map-marker" onclick="selectLocation('Breckenridge, CO', 200, 80)"/>
+                            <text x="200" y="65" text-anchor="middle" font-size="14" font-weight="700" fill="#333">Breckenridge</text>
+
+                            <!-- Blue River -->
+                            <circle cx="200" cy="180" r="8" fill="#00BF8F" class="map-marker" onclick="selectLocation('Blue River, CO', 200, 180)"/>
+                            <text x="220" y="185" font-size="12" fill="#333">Blue River</text>
+
+                            <!-- Alma (Office Location) -->
+                            <circle cx="200" cy="320" r="14" fill="#00BF8F" class="map-marker" onclick="selectLocation('Alma, CO', 200, 320)"/>
+                            <text x="200" y="305" text-anchor="middle" font-size="14" font-weight="700" fill="#333">Alma</text>
+                            <text x="200" y="355" text-anchor="middle" font-size="11" fill="#666">(Main Office)</text>
+
+                            <!-- Fairplay (South) -->
+                            <circle cx="200" cy="480" r="12" fill="#b3503e" class="map-marker" onclick="selectLocation('Fairplay, CO', 200, 480)"/>
+                            <text x="200" y="515" text-anchor="middle" font-size="14" font-weight="700" fill="#333">Fairplay</text>
+                        </svg>
                     </div>
 
                     <div class="slide-navigation">
@@ -706,8 +874,44 @@
                     </div>
                 </div>
 
-                <!-- Slide 5: Amenities -->
+                <!-- Slide 5: Quality Assessment -->
                 <div class="slide" data-slide="5">
+                    <h2>Property Quality</h2>
+                    <p class="slide-description">Help us assess your property's quality. Choose a star rating or upload photos for our team to review.</p>
+
+                    <h3 style="margin-top: 20px; margin-bottom: 15px;">Option 1: Star Rating</h3>
+                    <div class="star-rating-container">
+                        <div class="star-rating">
+                            <span class="star" data-rating="1" onclick="setStarRating(1)">★</span>
+                            <span class="star" data-rating="2" onclick="setStarRating(2)">★</span>
+                            <span class="star" data-rating="3" onclick="setStarRating(3)">★</span>
+                            <span class="star" data-rating="4" onclick="setStarRating(4)">★</span>
+                            <span class="star" data-rating="5" onclick="setStarRating(5)">★</span>
+                        </div>
+                        <div class="star-rating-label" id="starRatingLabel">Select a rating</div>
+                    </div>
+
+                    <div style="text-align: center; margin: 30px 0; color: #999; font-weight: 700;">— OR —</div>
+
+                    <h3 style="margin-bottom: 15px;">Option 2: Upload Photos</h3>
+                    <p style="font-size: 14px; color: #666; margin-bottom: 15px;">Upload 3-10 photos and our team will assess the quality.</p>
+
+                    <div class="photo-upload-area" id="photoUploadArea" onclick="document.getElementById('qualityPhotos').click()">
+                        <div class="photo-upload-icon">📸</div>
+                        <div class="photo-upload-text">Click to upload photos</div>
+                        <div class="photo-upload-hint">JPG, PNG (3-10 photos recommended)</div>
+                    </div>
+                    <input type="file" id="qualityPhotos" multiple accept="image/*" style="display: none;" onchange="handlePhotoUpload()">
+                    <div class="photo-preview-list" id="photoPreviewList"></div>
+
+                    <div class="slide-navigation">
+                        <button class="button button-secondary" onclick="prevSlide()">← Previous</button>
+                        <button class="button button-primary" onclick="nextSlide()" id="qualityNext" disabled>Next →</button>
+                    </div>
+                </div>
+
+                <!-- Slide 6: Amenities -->
+                <div class="slide" data-slide="6">
                     <h2>Amenities & Features</h2>
                     <p class="slide-description">Select all amenities that apply to your property:</p>
 
@@ -768,8 +972,8 @@
                     </div>
                 </div>
 
-                <!-- Slide 6: Additional Info & SMS -->
-                <div class="slide" data-slide="6">
+                <!-- Slide 7: Additional Info -->
+                <div class="slide" data-slide="7">
                     <h2>Additional Information</h2>
                     <p class="slide-description">Any other details we should know?</p>
 
@@ -778,51 +982,48 @@
                         <textarea id="additionalInfo" placeholder="Recent renovations, proximity to attractions, unique features, etc."></textarea>
                     </div>
 
-                    <div class="sms-optin">
-                        <label>
-                            <input type="checkbox" id="smsOptIn">
-                            <span>Yes, I'd like to receive text messages about my estimate and property management updates from Second Home Vacation Rentals.</span>
-                        </label>
-                        <div class="sms-disclaimer">
-                            By checking this box, you agree to receive text messages at the phone number provided. Message and data rates may apply. Reply STOP to opt out at any time.
-                        </div>
+                    <div class="info-box">
+                        <strong>What happens next?</strong> We'll review your submission and send a detailed revenue estimate to your email within 10 minutes.
                     </div>
 
                     <div class="slide-navigation">
                         <button class="button button-secondary" onclick="prevSlide()">← Previous</button>
-                        <button class="button button-primary" onclick="calculateEstimate()">Calculate My Estimate →</button>
+                        <button class="button button-primary" onclick="submitEstimate()">Submit My Request →</button>
                     </div>
                 </div>
 
-                <!-- Slide 7: Results -->
-                <div class="slide" data-slide="7">
-                    <h2>Your Revenue Estimate</h2>
-                    <p class="slide-description">Based on the information you provided, here's your estimated annual revenue:</p>
+                <!-- Slide 8: Thank You -->
+                <div class="slide" data-slide="8">
+                    <h2>Thank You!</h2>
+                    <p class="slide-description">Your revenue estimate request has been submitted successfully.</p>
 
-                    <div class="revenue-card">
-                        <div class="revenue-label">Projected Annual Revenue</div>
-                        <div class="revenue-amount" id="revenueAmount">$0</div>
-                        <div class="revenue-range" id="revenueRange">Range: $0 - $0</div>
+                    <div class="thank-you-card">
+                        <div class="thank-you-icon">✓</div>
+                        <h3 style="color: #fff; margin: 20px 0;">We'll Be In Touch Soon</h3>
+                        <p style="color: #fff; opacity: 0.9; font-size: 16px;">We're reviewing your property details and will send a comprehensive revenue estimate to <strong id="thankYouEmail"></strong> within the next 10 minutes.</p>
+                    </div>
 
-                        <div class="revenue-details">
-                            <h4>What This Includes:</h4>
-                            <ul>
-                                <li>Professional marketing on 15+ platforms</li>
-                                <li>Dynamic pricing optimization</li>
-                                <li>Full property management services</li>
-                                <li>Professional cleaning & maintenance</li>
-                                <li>24/7 guest support</li>
-                            </ul>
+                    <div style="background: #fff; padding: 30px; margin-top: 30px; border-left: 4px solid #00BF8F;">
+                        <h3 style="margin-top: 0;">About Second Home Vacation Rentals</h3>
+                        <p style="margin-bottom: 15px;">Since our founding, we've been Park County's trusted vacation rental management company. Our office at 29 S. Main Street in Alma (the highest incorporated town in North America) puts us right in the heart of the community we serve.</p>
+
+                        <h4 style="font-size: 18px; margin-top: 25px; margin-bottom: 15px; color: #00BF8F;">Why Property Owners Choose Us:</h4>
+                        <ul style="line-height: 2; padding-left: 20px;">
+                            <li><strong>Local Expertise:</strong> We exclusively serve the Alma and Placer Valley area - we know this market inside and out</li>
+                            <li><strong>Full-Service Management:</strong> From marketing to cleaning to maintenance, we handle everything</li>
+                            <li><strong>Premium Marketing:</strong> Your property listed on 15+ platforms with professional photography</li>
+                            <li><strong>Transparent Reporting:</strong> Real-time owner portal access and monthly financial statements</li>
+                            <li><strong>Hands-On Team:</strong> Local staff available 7 days a week, not a call center</li>
+                        </ul>
+
+                        <div style="text-align: center; margin-top: 30px;">
+                            <a href="https://www.secondhomevacationrentals.com" class="button button-primary" style="text-decoration: none;">Learn More About Us →</a>
                         </div>
                     </div>
 
-                    <div class="info-box">
-                        <strong>What's Next?</strong> We'll send a detailed breakdown to your email within 10 minutes. This will include seasonal trends, occupancy projections, and how we can help maximize your property's potential.
-                    </div>
-
-                    <div class="slide-navigation">
-                        <button class="button button-secondary" onclick="window.location.href='index.html'">← Back to Guidelines</button>
-                        <button class="button button-primary" onclick="window.location.href='https://www.secondhomevacationrentals.com'">Visit Our Website →</button>
+                    <div style="text-align: center; margin-top: 30px;">
+                        <p style="color: #666; margin-bottom: 15px;">Questions? We're here to help!</p>
+                        <a href="tel:9705467336" style="color: #00BF8F; font-weight: 700; text-decoration: none; font-size: 20px;">(970) 546-7336</a>
                     </div>
                 </div>
             </div>
@@ -845,16 +1046,29 @@
 
     <script>
         var currentSlide = 1
-        var totalSlides = 7
+        var totalSlides = 8
         var formData = {
             propertyType: null,
-            amenities: []
+            amenities: [],
+            qualityRating: null,
+            qualityPhotos: []
         }
+
+        // Park County locations for autocomplete
+        var parkCountyLocations = [
+            'Alma, CO 80420',
+            'Fairplay, CO 80440',
+            'Blue River, CO 80424',
+            'Breckenridge, CO 80424',
+            'Como, CO 80432',
+            'Jefferson, CO 80456',
+            'Highway 9 Corridor, Park County, CO'
+        ]
 
         // Initialize progress steps
         function initProgressSteps() {
             var progressSteps = document.getElementById('progressSteps')
-            var steps = ['Contact', 'Type', 'Location', 'Details', 'Amenities', 'Extra', 'Estimate']
+            var steps = ['Contact', 'Type', 'Location', 'Details', 'Quality', 'Amenities', 'Extra', 'Submit']
 
             steps.forEach(function(step, index) {
                 var stepDiv = document.createElement('div')
@@ -949,46 +1163,135 @@
             }
         }
 
-        // Calculate estimate
-        function calculateEstimate() {
-            // Get all form values
-            var bedrooms = parseInt(document.getElementById('bedrooms').value) || 3
-            var city = document.getElementById('city').value.toLowerCase()
+        // Location autocomplete
+        function handleLocationInput() {
+            var input = document.getElementById('locationSearch')
+            var suggestionsDiv = document.getElementById('locationSuggestions')
+            var query = input.value.toLowerCase()
 
-            // Calculate mock estimate
-            var baseRevenue = 45000
-            baseRevenue += (bedrooms * 8000)
-            baseRevenue += (formData.amenities.length * 3000)
-
-            // Location multiplier
-            var locationMultipliers = {
-                'aspen': 1.5,
-                'breckenridge': 1.4,
-                'vail': 1.45,
-                'fairplay': 1.1,
-                'steamboat': 1.35
+            if (query.length === 0) {
+                suggestionsDiv.classList.remove('active')
+                return
             }
 
-            var multiplier = 1.0
-            for (var key in locationMultipliers) {
-                if (city.includes(key)) {
-                    multiplier = locationMultipliers[key]
-                    break
+            var matches = parkCountyLocations.filter(function(location) {
+                return location.toLowerCase().includes(query)
+            })
+
+            if (matches.length > 0) {
+                suggestionsDiv.innerHTML = ''
+                matches.forEach(function(location) {
+                    var item = document.createElement('div')
+                    item.className = 'location-suggestion-item'
+                    item.textContent = location
+                    item.onclick = function() {
+                        input.value = location
+                        suggestionsDiv.classList.remove('active')
+                    }
+                    suggestionsDiv.appendChild(item)
+                })
+                suggestionsDiv.classList.add('active')
+            } else {
+                suggestionsDiv.classList.remove('active')
+            }
+        }
+
+        // Select location from map
+        function selectLocation(location, x, y) {
+            document.getElementById('locationSearch').value = location
+            document.getElementById('locationSuggestions').classList.remove('active')
+        }
+
+        // Star rating
+        var selectedStarRating = 0
+        function setStarRating(rating) {
+            selectedStarRating = rating
+            formData.qualityRating = rating
+
+            var stars = document.querySelectorAll('.star')
+            stars.forEach(function(star, index) {
+                if (index < rating) {
+                    star.classList.add('active')
+                } else {
+                    star.classList.remove('active')
                 }
+            })
+
+            var labels = ['Poor', 'Fair', 'Good', 'Very Good', 'Excellent']
+            document.getElementById('starRatingLabel').textContent = labels[rating - 1]
+
+            // Enable next button
+            document.getElementById('qualityNext').disabled = false
+        }
+
+        // Photo upload
+        var uploadedPhotos = []
+        function handlePhotoUpload() {
+            var files = document.getElementById('qualityPhotos').files
+            var previewList = document.getElementById('photoPreviewList')
+
+            for (var i = 0; i < files.length; i++) {
+                var file = files[i]
+                uploadedPhotos.push(file)
+
+                var reader = new FileReader()
+                reader.onload = (function(file, index) {
+                    return function(e) {
+                        var previewItem = document.createElement('div')
+                        previewItem.className = 'photo-preview-item'
+                        previewItem.innerHTML =
+                            '<img src="' + e.target.result + '" alt="Property photo">' +
+                            '<button class="photo-preview-remove" onclick="removePhoto(' + (uploadedPhotos.length - 1) + ')">×</button>'
+                        previewList.appendChild(previewItem)
+                    }
+                })(file, i)
+                reader.readAsDataURL(file)
             }
 
-            baseRevenue = Math.round(baseRevenue * multiplier)
+            formData.qualityPhotos = uploadedPhotos
 
-            // Display results
-            var formattedRevenue = '$' + baseRevenue.toLocaleString()
-            var lowEstimate = '$' + Math.round(baseRevenue * 0.85).toLocaleString()
-            var highEstimate = '$' + Math.round(baseRevenue * 1.15).toLocaleString()
+            // Enable next button if at least 3 photos
+            if (uploadedPhotos.length >= 3) {
+                document.getElementById('qualityNext').disabled = false
+            }
+        }
 
-            document.getElementById('revenueAmount').textContent = formattedRevenue
-            document.getElementById('revenueRange').textContent = 'Range: ' + lowEstimate + ' - ' + highEstimate
+        function removePhoto(index) {
+            uploadedPhotos.splice(index, 1)
+            formData.qualityPhotos = uploadedPhotos
 
-            // Show results slide
-            showSlide(7)
+            // Rebuild preview list
+            var previewList = document.getElementById('photoPreviewList')
+            previewList.innerHTML = ''
+
+            uploadedPhotos.forEach(function(file, i) {
+                var reader = new FileReader()
+                reader.onload = function(e) {
+                    var previewItem = document.createElement('div')
+                    previewItem.className = 'photo-preview-item'
+                    previewItem.innerHTML =
+                        '<img src="' + e.target.result + '" alt="Property photo">' +
+                        '<button class="photo-preview-remove" onclick="removePhoto(' + i + ')">×</button>'
+                    previewList.appendChild(previewItem)
+                }
+                reader.readAsDataURL(file)
+            })
+
+            // Disable next if less than 3 photos and no star rating
+            if (uploadedPhotos.length < 3 && selectedStarRating === 0) {
+                document.getElementById('qualityNext').disabled = true
+            }
+        }
+
+        // Submit estimate request
+        function submitEstimate() {
+            // Get email
+            var email = document.getElementById('email').value
+            document.getElementById('thankYouEmail').textContent = email
+
+            // In production, this would submit to backend
+            // For now, just show thank you page
+            showSlide(8)
         }
 
         // Phone formatting
