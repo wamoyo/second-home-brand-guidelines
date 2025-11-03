@@ -1074,6 +1074,8 @@
         var addresses = []
         var fuse = null
         var selectedAddress = null
+        var searchTimeout = null
+        var isSelectingAddress = false
 
         // Map variables
         var map = null
@@ -1265,19 +1267,38 @@
             })
         }
 
-        // Location autocomplete
+        // Location autocomplete with debouncing
         function handleLocationInput () {
+            // Don't trigger search if we're programmatically setting the value
+            if (isSelectingAddress) {
+                return
+            }
+
             var input = document.getElementById('locationSearch')
-            var suggestionsDiv = document.getElementById('locationSuggestions')
             var query = input.value.trim()
 
+            // Clear any pending search
+            if (searchTimeout) {
+                clearTimeout(searchTimeout)
+            }
+
+            // Hide if query too short
             if (query.length < 2 || !fuse) {
                 hideLocationSuggestions()
                 return
             }
 
-            var results = fuse.search(query, { limit: 10 })
-            displayLocationResults(results)
+            // Limit query length to prevent CPU overload
+            if (query.length > 100) {
+                hideLocationSuggestions()
+                return
+            }
+
+            // Debounce: wait 150ms after user stops typing
+            searchTimeout = setTimeout(function() {
+                var results = fuse.search(query, { limit: 10 })
+                displayLocationResults(results)
+            }, 150)
         }
 
         // Display location search results
@@ -1308,6 +1329,9 @@
 
         // Select an address from autocomplete
         function selectLocationAddress (address) {
+            // Set flag to prevent handleLocationInput from triggering
+            isSelectingAddress = true
+
             var input = document.getElementById('locationSearch')
             input.value = address.number + ' ' + address.street + ', ' + address.city + ', CO ' + address.postcode
             selectedAddress = address
@@ -1318,10 +1342,21 @@
                 var displayAddress = address.number + ' ' + address.street + '<br>' + address.city + ', CO ' + address.postcode
                 addPropertyMarker(address.coordinates.lat, address.coordinates.lng, displayAddress)
             }
+
+            // Reset flag after a short delay
+            setTimeout(function() {
+                isSelectingAddress = false
+            }, 100)
         }
 
         // Hide location suggestions
         function hideLocationSuggestions () {
+            // Cancel any pending search
+            if (searchTimeout) {
+                clearTimeout(searchTimeout)
+                searchTimeout = null
+            }
+
             var suggestionsDiv = document.getElementById('locationSuggestions')
             suggestionsDiv.classList.remove('active')
         }
