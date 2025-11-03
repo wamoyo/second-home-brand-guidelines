@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revenue Estimator - Second Home Vacation Rentals</title>
+    <style>
+        /* Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: 300;
+            font-size: 16px;
+            line-height: 1.75;
+            color: #333;
+            background-color: #fff;
+        }
+
+        /* Layout */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section {
+            padding: 50px 0;
+        }
+
+        .section--gray {
+            background-color: #f7f7f7;
+        }
+
+        /* Hero */
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><rect fill="%23333" width="1200" height="600"/><polygon fill="%23444" points="0,600 400,200 800,400 1200,100 1200,600"/><polygon fill="%23555" points="0,600 300,300 600,450 900,250 1200,350 1200,600"/></svg>');
+            background-size: cover;
+            background-position: center;
+            padding: 60px 0 80px 0;
+            text-align: center;
+            color: #fff;
+        }
+
+        .hero-logo {
+            max-width: 400px;
+            width: 100%;
+            height: auto;
+            filter: brightness(0) invert(1);
+            margin-bottom: 30px;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 300;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 20px;
+            max-width: 700px;
+            margin: 0 auto 30px auto;
+        }
+
+        /* Headings */
+        h2 {
+            font-size: 40px;
+            margin-bottom: 25px;
+            text-align: center;
+            color: #b3503e;
+            font-weight: 700;
+        }
+
+        h2:after {
+            content: "";
+            display: block;
+            width: 100px;
+            height: 3px;
+            background-color: #b3503e;
+            margin: 20px auto;
+        }
+
+        h3 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #b3503e;
+            font-weight: 700;
+        }
+
+        h4 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        p {
+            margin-bottom: 20px;
+        }
+
+        /* Form Container */
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 50px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        /* Form Grid */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .form-row.full {
+            grid-template-columns: 1fr;
+        }
+
+        /* Form Groups */
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 700;
+            color: #333;
+            font-size: 16px;
+        }
+
+        label .required {
+            color: #b3503e;
+            font-weight: 700;
+        }
+
+        label .optional {
+            color: #999;
+            font-weight: 400;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ccc;
+            border-radius: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 16px;
+            background-color: #fff;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="tel"]:focus,
+        input[type="number"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #00BF8F;
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: #ccc;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        /* Checkbox Group */
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: auto;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .checkbox-item label {
+            margin: 0;
+            font-weight: 400;
+            cursor: pointer;
+        }
+
+        /* File Upload */
+        .file-upload {
+            border: 2px dashed #ccc;
+            padding: 30px;
+            text-align: center;
+            background: #f7f7f7;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .file-upload:hover {
+            border-color: #00BF8F;
+            background: #f0fff0;
+        }
+
+        .file-upload input[type="file"] {
+            display: none;
+        }
+
+        .file-upload-label {
+            display: block;
+            cursor: pointer;
+        }
+
+        .file-upload-icon {
+            font-size: 48px;
+            color: #00BF8F;
+            margin-bottom: 15px;
+        }
+
+        .file-upload-text {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .file-upload-hint {
+            font-size: 14px;
+            color: #999;
+        }
+
+        .file-list {
+            margin-top: 15px;
+            text-align: left;
+        }
+
+        .file-item {
+            padding: 10px;
+            background: #fff;
+            border: 1px solid #ccc;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .file-item-name {
+            color: #333;
+            font-size: 14px;
+        }
+
+        .file-item-remove {
+            color: #b3503e;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        /* SMS Opt-in */
+        .sms-optin {
+            background: #f7f7f7;
+            padding: 20px;
+            margin-top: 30px;
+            border-left: 4px solid #00BF8F;
+        }
+
+        .sms-optin label {
+            display: flex;
+            align-items: flex-start;
+            font-weight: 400;
+            cursor: pointer;
+        }
+
+        .sms-optin input[type="checkbox"] {
+            width: auto;
+            margin-right: 10px;
+            margin-top: 4px;
+            cursor: pointer;
+        }
+
+        .sms-disclaimer {
+            font-size: 12px;
+            color: #999;
+            margin-top: 10px;
+            line-height: 1.6;
+        }
+
+        /* Buttons */
+        .button {
+            display: inline-block;
+            padding: 15px 40px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 0;
+            width: auto;
+        }
+
+        .button-primary {
+            background-color: #00BF8F;
+            color: #fff;
+        }
+
+        .button-primary:hover {
+            background-color: #00a077;
+        }
+
+        .button-secondary {
+            background-color: #b3503e;
+            color: #fff;
+        }
+
+        .button-secondary:hover {
+            background-color: #9a4434;
+        }
+
+        .button-block {
+            display: block;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Info Box */
+        .info-box {
+            background: #f7f7f7;
+            padding: 30px;
+            margin-bottom: 40px;
+            border-left: 4px solid #00BF8F;
+        }
+
+        .info-box h4 {
+            color: #00BF8F;
+            margin-bottom: 15px;
+        }
+
+        .info-box ul {
+            line-height: 2;
+            padding-left: 20px;
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .feature-card {
+            text-align: center;
+            padding: 30px 20px;
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .feature-icon {
+            font-size: 48px;
+            color: #00BF8F;
+            margin-bottom: 15px;
+        }
+
+        .feature-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #b3503e;
+            margin-bottom: 10px;
+        }
+
+        .feature-description {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #000;
+            color: #999;
+            padding: 30px 0;
+            text-align: center;
+        }
+
+        .footer p {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .footer a {
+            color: #00BF8F;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .hero-logo {
+                max-width: 250px;
+            }
+
+            h2 {
+                font-size: 28px;
+            }
+
+            .form-container {
+                padding: 30px 20px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .checkbox-group {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Smooth Scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Text Alignment */
+        .text-center {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero -->
+    <section class="hero">
+        <div class="container">
+            <img src="logo-charcoal-500.png" alt="Second Home Vacation Rentals" class="hero-logo">
+            <h1>Revenue Estimator</h1>
+            <p>Discover your property's earning potential with Second Home. Get a personalized revenue estimate based on your property's unique features and our market expertise.</p>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="section section--gray">
+        <div class="container">
+            <h2>How It Works</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📝</div>
+                    <div class="feature-title">1. Tell Us About Your Property</div>
+                    <div class="feature-description">Complete the form below with details about your property, location, and amenities.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <div class="feature-title">2. We Analyze the Data</div>
+                    <div class="feature-description">Our system evaluates your property using market data, historical trends, and seasonal patterns.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📧</div>
+                    <div class="feature-title">3. Receive Your Estimate</div>
+                    <div class="feature-description">Get a detailed revenue projection via email within 10 minutes.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Form Section -->
+    <section class="section">
+        <div class="container">
+            <div class="form-container">
+                <h3 class="text-center" style="margin-bottom: 30px;">Property Information</h3>
+
+                <div class="info-box">
+                    <h4>What We'll Estimate</h4>
+                    <ul>
+                        <li>Projected annual revenue based on market rates</li>
+                        <li>Seasonal occupancy patterns and booking trends</li>
+                        <li>Comparison with similar properties in your area</li>
+                        <li>Optimization recommendations to maximize earnings</li>
+                    </ul>
+                </div>
+
+                <form id="revenueEstimatorForm">
+                    <!-- Contact Information -->
+                    <h4>Contact Information</h4>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="firstName">First Name <span class="required">*</span></label>
+                            <input type="text" id="firstName" name="firstName" placeholder="John" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Last Name <span class="required">*</span></label>
+                            <input type="text" id="lastName" name="lastName" placeholder="Smith" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="email">Email Address <span class="required">*</span></label>
+                            <input type="email" id="email" name="email" placeholder="your@email.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number <span class="required">*</span></label>
+                            <input type="tel" id="phone" name="phone" placeholder="(970) 555-1234" required>
+                        </div>
+                    </div>
+
+                    <!-- Property Location -->
+                    <h4 style="margin-top: 40px;">Property Location</h4>
+
+                    <div class="form-group">
+                        <label for="address">Property Address <span class="required">*</span></label>
+                        <input type="text" id="address" name="address" placeholder="123 Mountain View Drive" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="city">City <span class="required">*</span></label>
+                            <input type="text" id="city" name="city" placeholder="Fairplay" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="zipcode">Zip Code <span class="required">*</span></label>
+                            <input type="text" id="zipcode" name="zipcode" placeholder="80440" required>
+                        </div>
+                    </div>
+
+                    <!-- Property Details -->
+                    <h4 style="margin-top: 40px;">Property Details</h4>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="propertyType">Property Type <span class="required">*</span></label>
+                            <select id="propertyType" name="propertyType" required>
+                                <option value="">Select property type</option>
+                                <option value="cabin">Cabin</option>
+                                <option value="house">House</option>
+                                <option value="condo">Condo</option>
+                                <option value="chalet">Chalet</option>
+                                <option value="townhome">Townhome</option>
+                                <option value="lodge">Lodge</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="squareFootage">Square Footage <span class="optional">(optional)</span></label>
+                            <input type="number" id="squareFootage" name="squareFootage" placeholder="2500">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="bedrooms">Bedrooms <span class="required">*</span></label>
+                            <select id="bedrooms" name="bedrooms" required>
+                                <option value="">Select number</option>
+                                <option value="1">1 Bedroom</option>
+                                <option value="2">2 Bedrooms</option>
+                                <option value="3">3 Bedrooms</option>
+                                <option value="4">4 Bedrooms</option>
+                                <option value="5">5 Bedrooms</option>
+                                <option value="6">6+ Bedrooms</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="bathrooms">Bathrooms <span class="required">*</span></label>
+                            <select id="bathrooms" name="bathrooms" required>
+                                <option value="">Select number</option>
+                                <option value="1">1 Bathroom</option>
+                                <option value="1.5">1.5 Bathrooms</option>
+                                <option value="2">2 Bathrooms</option>
+                                <option value="2.5">2.5 Bathrooms</option>
+                                <option value="3">3 Bathrooms</option>
+                                <option value="3.5">3.5 Bathrooms</option>
+                                <option value="4">4+ Bathrooms</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="maxGuests">Maximum Guest Capacity <span class="required">*</span></label>
+                        <input type="number" id="maxGuests" name="maxGuests" placeholder="8" required>
+                    </div>
+
+                    <!-- Amenities -->
+                    <h4 style="margin-top: 40px;">Amenities & Features</h4>
+                    <p style="font-size: 14px; color: #666; margin-bottom: 20px;">Select all that apply to your property:</p>
+
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="hotTub" name="amenities" value="hot_tub">
+                            <label for="hotTub">Hot Tub</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="gameRoom" name="amenities" value="game_room">
+                            <label for="gameRoom">Game Room</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="mediaRoom" name="amenities" value="media_room">
+                            <label for="mediaRoom">Media Room</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="fireplace" name="amenities" value="fireplace">
+                            <label for="fireplace">Fireplace</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="mountainViews" name="amenities" value="mountain_views">
+                            <label for="mountainViews">Mountain Views</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="deck" name="amenities" value="deck">
+                            <label for="deck">Deck/Patio</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="garage" name="amenities" value="garage">
+                            <label for="garage">Garage/Parking</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="wifi" name="amenities" value="wifi">
+                            <label for="wifi">High-Speed WiFi</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="washer" name="amenities" value="washer_dryer">
+                            <label for="washer">Washer/Dryer</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="kitchen" name="amenities" value="full_kitchen">
+                            <label for="kitchen">Full Kitchen</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="petFriendly" name="amenities" value="pet_friendly">
+                            <label for="petFriendly">Pet Friendly</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="skiIn" name="amenities" value="ski_in_out">
+                            <label for="skiIn">Ski In/Out</label>
+                        </div>
+                    </div>
+
+                    <!-- Property Photos -->
+                    <h4 style="margin-top: 40px;">Property Photos</h4>
+                    <p style="font-size: 14px; color: #666; margin-bottom: 20px;">Upload 3-10 photos of your property (interior, exterior, views, amenities). This helps us assess quality and provide a more accurate estimate.</p>
+
+                    <div class="file-upload" id="fileUploadArea">
+                        <label for="propertyPhotos" class="file-upload-label">
+                            <div class="file-upload-icon">📸</div>
+                            <div class="file-upload-text">Click to upload or drag and drop photos</div>
+                            <div class="file-upload-hint">JPG, PNG up to 10MB each (3-10 photos recommended)</div>
+                        </label>
+                        <input type="file" id="propertyPhotos" name="propertyPhotos" multiple accept="image/*">
+                    </div>
+                    <div class="file-list" id="fileList"></div>
+
+                    <!-- Additional Information -->
+                    <h4 style="margin-top: 40px;">Additional Information</h4>
+
+                    <div class="form-group">
+                        <label for="additionalInfo">Anything else we should know? <span class="optional">(optional)</span></label>
+                        <textarea id="additionalInfo" name="additionalInfo" placeholder="Recent renovations, special features, proximity to attractions, etc."></textarea>
+                    </div>
+
+                    <!-- SMS Opt-in -->
+                    <div class="sms-optin">
+                        <label>
+                            <input type="checkbox" id="smsOptIn" name="smsOptIn">
+                            <span>Yes, I'd like to receive text messages about my estimate and property management updates from Second Home Vacation Rentals.</span>
+                        </label>
+                        <div class="sms-disclaimer">
+                            By checking this box, you agree to receive text messages at the phone number provided. Message and data rates may apply. Reply STOP to opt out at any time.
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div style="margin-top: 40px; text-align: center;">
+                        <button type="submit" class="button button-primary button-block">
+                            Get My Revenue Estimate
+                        </button>
+                        <p style="font-size: 14px; color: #999; margin-top: 20px;">
+                            Your estimate will be emailed to you within 10 minutes
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Second Home -->
+    <section class="section section--gray">
+        <div class="container">
+            <h2>Why Second Home?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🏔️</div>
+                    <div class="feature-title">Local Expertise</div>
+                    <div class="feature-description">We know the Rocky Mountain market inside and out, with years of experience managing properties in the area.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💰</div>
+                    <div class="feature-title">Revenue Optimization</div>
+                    <div class="feature-description">Our pricing strategies and marketing reach maximize your property's earning potential year-round.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🛠️</div>
+                    <div class="feature-title">Full-Service Management</div>
+                    <div class="feature-description">From cleaning to maintenance to guest services, we handle every detail so you don't have to.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <div class="feature-title">Transparent Reporting</div>
+                    <div class="feature-description">Monthly statements, real-time owner portal access, and detailed financial tracking.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Second Home Vacation Rentals. All rights reserved.</p>
+            <p style="margin-top: 10px;">
+                Questions? Call us at <a href="tel:9705467336">(970) 546-7336</a> or visit
+                <a href="https://www.secondhomevacationrentals.com" target="_blank">secondhomevacationrentals.com</a>
+            </p>
+            <p style="margin-top: 20px;">
+                <a href="index.html">← Back to Brand Guidelines</a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // File upload handling
+        var fileInput = document.getElementById('propertyPhotos')
+        var fileList = document.getElementById('fileList')
+        var fileUploadArea = document.getElementById('fileUploadArea')
+        var uploadedFiles = []
+
+        fileInput.addEventListener('change', function(e) {
+            handleFiles(e.target.files)
+        })
+
+        // Drag and drop
+        fileUploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault()
+            fileUploadArea.style.borderColor = '#00BF8F'
+            fileUploadArea.style.background = '#f0fff0'
+        })
+
+        fileUploadArea.addEventListener('dragleave', function(e) {
+            e.preventDefault()
+            fileUploadArea.style.borderColor = '#ccc'
+            fileUploadArea.style.background = '#f7f7f7'
+        })
+
+        fileUploadArea.addEventListener('drop', function(e) {
+            e.preventDefault()
+            fileUploadArea.style.borderColor = '#ccc'
+            fileUploadArea.style.background = '#f7f7f7'
+            handleFiles(e.dataTransfer.files)
+        })
+
+        function handleFiles(files) {
+            for (var i = 0; i < files.length; i++) {
+                var file = files[i]
+                if (file.type.startsWith('image/')) {
+                    uploadedFiles.push(file)
+                    addFileToList(file, uploadedFiles.length - 1)
+                }
+            }
+        }
+
+        function addFileToList(file, index) {
+            var fileItem = document.createElement('div')
+            fileItem.className = 'file-item'
+            fileItem.innerHTML = '<span class="file-item-name">' + file.name + '</span>' +
+                                '<span class="file-item-remove" onclick="removeFile(' + index + ')">Remove</span>'
+            fileList.appendChild(fileItem)
+        }
+
+        function removeFile(index) {
+            uploadedFiles.splice(index, 1)
+            fileList.innerHTML = ''
+            uploadedFiles.forEach(function(file, i) {
+                addFileToList(file, i)
+            })
+        }
+
+        // Form submission
+        document.getElementById('revenueEstimatorForm').addEventListener('submit', function(e) {
+            e.preventDefault()
+
+            // Collect form data
+            var formData = new FormData(this)
+
+            // Add uploaded files
+            uploadedFiles.forEach(function(file) {
+                formData.append('photos', file)
+            })
+
+            // Show success message (in production, this would submit to backend)
+            alert('Thank you! Your revenue estimate request has been submitted. You\'ll receive a detailed estimate via email within 10 minutes.')
+
+            // In production, you would send this to your backend:
+            // fetch('/api/revenue-estimate', {
+            //     method: 'POST',
+            //     body: formData
+            // })
+        })
+
+        // Phone number formatting
+        document.getElementById('phone').addEventListener('input', function(e) {
+            var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/)
+            e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '')
+        })
+
+        console.log('%cSecond Home Revenue Estimator', 'color: #00BF8F; font-size: 24px; font-weight: bold')
+        console.log('%cBuilt with Second Home brand guidelines', 'color: #333; font-size: 14px')
+    </script>
+</body>
+</html>

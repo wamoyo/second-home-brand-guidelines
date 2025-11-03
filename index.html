@@ -72,7 +72,26 @@
         .hero p {
             font-size: 20px;
             max-width: 600px;
-            margin: 0 auto;
+            margin: 0 auto 30px auto;
+        }
+
+        .hero-button {
+            display: inline-block;
+            padding: 15px 40px;
+            background: #00BF8F;
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 0;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .hero-button:hover {
+            background: #00a077;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+            transform: translateY(-2px);
         }
 
         /* Headings */
@@ -584,6 +603,12 @@
             <img src="logo-charcoal-500.png" alt="Second Home Vacation Rentals" class="hero-logo">
             <h1>Brand Guidelines</h1>
             <p>Welcome to the Second Home Vacation Rentals brand guidelines. This document outlines our visual identity, design principles, and usage standards.</p>
+            <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-top: 30px;">
+                <a href="revenue-estimator.html" class="hero-button">📊 Form-Based Revenue Estimator</a>
+                <a href="chat-estimator.html" class="hero-button">💬 Chat-Based Revenue Estimator</a>
+                <a href="slide-estimator.html" class="hero-button">📑 Slide-Based Revenue Estimator</a>
+                <a href="interactive-estimator.html" class="hero-button">⚡ Interactive Revenue Estimator</a>
+            </div>
         </div>
     </section>
 

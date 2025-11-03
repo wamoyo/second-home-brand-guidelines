@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Revenue Estimator - Second Home Vacation Rentals</title>
+    <style>
+        /* Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: 300;
+            font-size: 16px;
+            line-height: 1.75;
+            color: #333;
+            background-color: #f7f7f7;
+        }
+
+        /* Layout */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section {
+            padding: 50px 0;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><rect fill="%23333" width="1200" height="600"/><polygon fill="%23444" points="0,600 400,200 800,400 1200,100 1200,600"/><polygon fill="%23555" points="0,600 300,300 600,450 900,250 1200,350 1200,600"/></svg>');
+            background-size: cover;
+            background-position: center;
+            padding: 30px 0;
+            text-align: center;
+            color: #fff;
+        }
+
+        .header-logo {
+            max-width: 250px;
+            width: 100%;
+            height: auto;
+            filter: brightness(0) invert(1);
+            margin-bottom: 15px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 300;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 16px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Chat Container */
+        .chat-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Chat Messages */
+        .chat-messages {
+            padding: 20px 0;
+        }
+
+        .message {
+            margin-bottom: 30px;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message-bot {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .message-user {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 8px;
+        }
+
+        .message-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 0;
+            background: #00BF8F;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .message-user .message-avatar {
+            background: #b3503e;
+        }
+
+        .message-content {
+            max-width: 100%;
+            padding: 15px 20px;
+            background: #f7f7f7;
+            border-radius: 0;
+        }
+
+        .message-user .message-content {
+            background: #00BF8F;
+            color: #fff;
+            max-width: 80%;
+        }
+
+        .message-content p {
+            margin: 0 0 10px 0;
+        }
+
+        .message-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Property Type Cards */
+        .property-types {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .property-type-card {
+            background: #fff;
+            border: 2px solid #ccc;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .property-type-card:hover {
+            border-color: #00BF8F;
+            background: #f0fff0;
+        }
+
+        .property-type-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .property-type-label {
+            font-size: 14px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        /* Amenity Buttons */
+        .amenity-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .amenity-button {
+            background: #fff;
+            border: 2px solid #ccc;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .amenity-button:hover {
+            border-color: #00BF8F;
+            background: #f0fff0;
+        }
+
+        .amenity-button.selected {
+            border-color: #00BF8F;
+            background: #00BF8F;
+            color: #fff;
+        }
+
+        /* Revenue Card */
+        .revenue-card {
+            background: linear-gradient(135deg, #00BF8F 0%, #00a077 100%);
+            color: #fff;
+            padding: 25px;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .revenue-amount {
+            font-size: 48px;
+            font-weight: 700;
+            margin: 15px 0;
+        }
+
+        .revenue-label {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .revenue-details {
+            background: rgba(255,255,255,0.2);
+            padding: 15px;
+            margin-top: 15px;
+            text-align: left;
+        }
+
+        .revenue-details h4 {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .revenue-details ul {
+            list-style: none;
+            font-size: 14px;
+            line-height: 2;
+        }
+
+        .revenue-details ul li:before {
+            content: "✓ ";
+            margin-right: 5px;
+        }
+
+        /* Quick Reply Buttons */
+        .quick-replies {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .quick-reply-btn {
+            background: #00BF8F;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .quick-reply-btn:hover {
+            background: #00a077;
+        }
+
+        /* Chat Input */
+        .chat-input-container {
+            border-top: 2px solid #ccc;
+            padding: 20px 0;
+            background: transparent;
+            margin-top: 30px;
+        }
+
+        .chat-input-wrapper {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #ccc;
+            border-radius: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: #00BF8F;
+        }
+
+        .chat-input::placeholder {
+            color: #ccc;
+        }
+
+        .chat-send-btn {
+            background: #00BF8F;
+            color: #fff;
+            border: none;
+            padding: 12px 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .chat-send-btn:hover {
+            background: #00a077;
+        }
+
+        .chat-send-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* Number Input Group */
+        .number-input-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .number-input-group input {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #ccc;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 14px;
+        }
+
+        .number-input-group input:focus {
+            outline: none;
+            border-color: #00BF8F;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #000;
+            color: #999;
+            padding: 30px 0;
+            text-align: center;
+        }
+
+        .footer p {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .footer a {
+            color: #00BF8F;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .property-types {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .amenity-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .message-user .message-content {
+                max-width: 90%;
+            }
+
+            .revenue-amount {
+                font-size: 36px;
+            }
+
+            .chat-messages {
+                padding: 20px;
+            }
+        }
+
+        /* Loading Indicator */
+        .typing-indicator {
+            display: flex;
+            gap: 5px;
+            padding: 10px 0;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: #00BF8F;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% { opacity: 0.3; }
+            30% { opacity: 1; }
+        }
+
+        /* Compact Info Card */
+        .info-card {
+            background: #f7f7f7;
+            border-left: 4px solid #00BF8F;
+            padding: 15px;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .info-card strong {
+            color: #00BF8F;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <img src="logo-charcoal-500.png" alt="Second Home Vacation Rentals" class="header-logo">
+            <h1>Chat Revenue Estimator</h1>
+            <p>Let's chat about your property and get you an estimate in minutes</p>
+        </div>
+    </header>
+
+    <!-- Chat Section -->
+    <section class="section">
+        <div class="container">
+            <div class="chat-container">
+                <div class="chat-messages" id="chatMessages">
+                    <!-- Messages will be dynamically added here -->
+                </div>
+                <div class="chat-input-container">
+                    <div class="chat-input-wrapper">
+                        <input
+                            type="text"
+                            id="chatInput"
+                            class="chat-input"
+                            placeholder="Type your message..."
+                            disabled
+                        >
+                        <button class="chat-send-btn" id="sendBtn" disabled>Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Second Home Vacation Rentals. All rights reserved.</p>
+            <p style="margin-top: 10px;">
+                Questions? Call us at <a href="tel:9705467336">(970) 546-7336</a> or visit
+                <a href="https://www.secondhomevacationrentals.com" target="_blank">secondhomevacationrentals.com</a>
+            </p>
+            <p style="margin-top: 20px;">
+                <a href="index.html">← Back to Brand Guidelines</a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        var chatMessages = document.getElementById('chatMessages')
+        var chatInput = document.getElementById('chatInput')
+        var sendBtn = document.getElementById('sendBtn')
+
+        var conversationData = {
+            propertyType: null,
+            location: null,
+            bedrooms: null,
+            bathrooms: null,
+            amenities: [],
+            name: null,
+            email: null
+        }
+
+        var currentStep = 0
+
+        // Add bot message
+        function addBotMessage(content, delay = 1000) {
+            setTimeout(function() {
+                var messageDiv = document.createElement('div')
+                messageDiv.className = 'message message-bot'
+                messageDiv.innerHTML =
+                    '<div class="message-avatar">🏔️</div>' +
+                    '<div class="message-content">' + content + '</div>'
+                chatMessages.appendChild(messageDiv)
+                scrollToBottom()
+            }, delay)
+        }
+
+        // Add user message
+        function addUserMessage(content, delay = 0) {
+            setTimeout(function() {
+                var messageDiv = document.createElement('div')
+                messageDiv.className = 'message message-user'
+                messageDiv.innerHTML =
+                    '<div class="message-avatar">👤</div>' +
+                    '<div class="message-content">' + content + '</div>'
+                chatMessages.appendChild(messageDiv)
+                scrollToBottom()
+            }, delay)
+        }
+
+        // Show typing indicator
+        function showTyping() {
+            var typingDiv = document.createElement('div')
+            typingDiv.className = 'message message-bot'
+            typingDiv.id = 'typing-indicator'
+            typingDiv.innerHTML =
+                '<div class="message-avatar">🏔️</div>' +
+                '<div class="message-content">' +
+                    '<div class="typing-indicator">' +
+                        '<div class="typing-dot"></div>' +
+                        '<div class="typing-dot"></div>' +
+                        '<div class="typing-dot"></div>' +
+                    '</div>' +
+                '</div>'
+            chatMessages.appendChild(typingDiv)
+            scrollToBottom()
+        }
+
+        // Remove typing indicator
+        function removeTyping() {
+            var typing = document.getElementById('typing-indicator')
+            if (typing) {
+                typing.remove()
+            }
+        }
+
+        // Scroll to bottom
+        function scrollToBottom() {
+            var chatContainer = document.querySelector('.chat-container')
+            if (chatContainer) {
+                chatContainer.scrollIntoView({ behavior: 'smooth', block: 'end' })
+            }
+        }
+
+        // Step 1: Welcome
+        function stepWelcome() {
+            addBotMessage(
+                '<p><strong>Hi there! 👋</strong></p>' +
+                '<p>I\'m here to help you estimate your property\'s revenue potential with Second Home Vacation Rentals.</p>' +
+                '<p>This will only take a few minutes. Ready to get started?</p>' +
+                '<div class="quick-replies">' +
+                    '<button class="quick-reply-btn" onclick="startEstimate()">Let\'s do it!</button>' +
+                    '<button class="quick-reply-btn" onclick="startEstimate()">I\'m ready</button>' +
+                '</div>',
+                500
+            )
+        }
+
+        // Start estimate
+        function startEstimate() {
+            addUserMessage('<p>Let\'s do it!</p>')
+            setTimeout(function() {
+                showTyping()
+                setTimeout(function() {
+                    removeTyping()
+                    stepPropertyType()
+                }, 1500)
+            }, 500)
+        }
+
+        // Step 2: Property Type
+        function stepPropertyType() {
+            addBotMessage(
+                '<p><strong>Great!</strong> Let\'s start with the basics.</p>' +
+                '<p>What type of property do you have?</p>' +
+                '<div class="property-types">' +
+                    '<div class="property-type-card" onclick="selectPropertyType(\'Cabin\')">' +
+                        '<div class="property-type-icon">🏕️</div>' +
+                        '<div class="property-type-label">Cabin</div>' +
+                    '</div>' +
+                    '<div class="property-type-card" onclick="selectPropertyType(\'House\')">' +
+                        '<div class="property-type-icon">🏠</div>' +
+                        '<div class="property-type-label">House</div>' +
+                    '</div>' +
+                    '<div class="property-type-card" onclick="selectPropertyType(\'Condo\')">' +
+                        '<div class="property-type-icon">🏢</div>' +
+                        '<div class="property-type-label">Condo</div>' +
+                    '</div>' +
+                    '<div class="property-type-card" onclick="selectPropertyType(\'Chalet\')">' +
+                        '<div class="property-type-icon">⛰️</div>' +
+                        '<div class="property-type-label">Chalet</div>' +
+                    '</div>' +
+                    '<div class="property-type-card" onclick="selectPropertyType(\'Townhome\')">' +
+                        '<div class="property-type-icon">🏘️</div>' +
+                        '<div class="property-type-label">Townhome</div>' +
+                    '</div>' +
+                    '<div class="property-type-card" onclick="selectPropertyType(\'Lodge\')">' +
+                        '<div class="property-type-icon">🏔️</div>' +
+                        '<div class="property-type-label">Lodge</div>' +
+                    '</div>' +
+                '</div>'
+            )
+        }
+
+        // Select property type
+        function selectPropertyType(type) {
+            conversationData.propertyType = type
+            addUserMessage('<p>' + type + '</p>')
+
+            setTimeout(function() {
+                showTyping()
+                setTimeout(function() {
+                    removeTyping()
+                    stepLocation()
+                }, 1500)
+            }, 500)
+        }
+
+        // Step 3: Location
+        function stepLocation() {
+            chatInput.disabled = false
+            sendBtn.disabled = false
+            chatInput.placeholder = "e.g., Fairplay, Breckenridge, Aspen..."
+
+            addBotMessage(
+                '<p>Perfect! A <strong>' + conversationData.propertyType.toLowerCase() + '</strong> is a great choice for the area.</p>' +
+                '<p>Where is your property located? (City name is fine)</p>'
+            )
+
+            // Set up input handler for location
+            sendBtn.onclick = function() {
+                var location = chatInput.value.trim()
+                if (location) {
+                    conversationData.location = location
+                    addUserMessage('<p>' + location + '</p>')
+                    chatInput.value = ''
+                    chatInput.disabled = true
+                    sendBtn.disabled = true
+
+                    setTimeout(function() {
+                        showTyping()
+                        setTimeout(function() {
+                            removeTyping()
+                            stepBedBath()
+                        }, 1500)
+                    }, 500)
+                }
+            }
+
+            chatInput.onkeypress = function(e) {
+                if (e.key === 'Enter') {
+                    sendBtn.onclick()
+                }
+            }
+        }
+
+        // Step 4: Bedrooms & Bathrooms
+        function stepBedBath() {
+            addBotMessage(
+                '<p>Nice! <strong>' + conversationData.location + '</strong> is a popular area.</p>' +
+                '<p>How many bedrooms and bathrooms does your property have?</p>' +
+                '<div class="info-card">Click the buttons below to select:</div>' +
+                '<div class="quick-replies">' +
+                    '<button class="quick-reply-btn" onclick="selectBedBath(2, 1)">2 Bed / 1 Bath</button>' +
+                    '<button class="quick-reply-btn" onclick="selectBedBath(3, 2)">3 Bed / 2 Bath</button>' +
+                    '<button class="quick-reply-btn" onclick="selectBedBath(4, 3)">4 Bed / 3 Bath</button>' +
+                    '<button class="quick-reply-btn" onclick="selectBedBath(5, 4)">5+ Bed / 4+ Bath</button>' +
+                '</div>'
+            )
+        }
+
+        // Select bed/bath
+        function selectBedBath(bed, bath) {
+            conversationData.bedrooms = bed
+            conversationData.bathrooms = bath
+            addUserMessage('<p>' + bed + ' Bedrooms, ' + bath + ' Bathrooms</p>')
+
+            setTimeout(function() {
+                showTyping()
+                setTimeout(function() {
+                    removeTyping()
+                    stepAmenities()
+                }, 1500)
+            }, 500)
+        }
+
+        // Step 5: Amenities
+        var amenitySelections = []
+
+        function stepAmenities() {
+            addBotMessage(
+                '<p>Excellent! Now, which amenities does your property offer?</p>' +
+                '<p><em>(Select all that apply, then click "Continue")</em></p>' +
+                '<div class="amenity-grid">' +
+                    '<button class="amenity-button" onclick="toggleAmenity(this, \'Hot Tub\')">🛁 Hot Tub</button>' +
+                    '<button class="amenity-button" onclick="toggleAmenity(this, \'Mountain Views\')">🏔️ Mountain Views</button>' +
+                    '<button class="amenity-button" onclick="toggleAmenity(this, \'Game Room\')">🎮 Game Room</button>' +
+                    '<button class="amenity-button" onclick="toggleAmenity(this, \'Fireplace\')">🔥 Fireplace</button>' +
+                    '<button class="amenity-button" onclick="toggleAmenity(this, \'Ski In/Out\')">⛷️ Ski In/Out</button>' +
+                    '<button class="amenity-button" onclick="toggleAmenity(this, \'Deck/Patio\')">🪑 Deck/Patio</button>' +
+                '</div>' +
+                '<div class="quick-replies" style="margin-top: 20px;">' +
+                    '<button class="quick-reply-btn" onclick="finishAmenities()">Continue →</button>' +
+                '</div>'
+            )
+        }
+
+        // Toggle amenity selection
+        function toggleAmenity(button, amenity) {
+            button.classList.toggle('selected')
+            var index = amenitySelections.indexOf(amenity)
+            if (index > -1) {
+                amenitySelections.splice(index, 1)
+            } else {
+                amenitySelections.push(amenity)
+            }
+        }
+
+        // Finish amenities
+        function finishAmenities() {
+            conversationData.amenities = amenitySelections
+            var amenityText = amenitySelections.length > 0
+                ? '<p>' + amenitySelections.join(', ') + '</p>'
+                : '<p>No additional amenities selected</p>'
+            addUserMessage(amenityText)
+
+            setTimeout(function() {
+                showTyping()
+                setTimeout(function() {
+                    removeTyping()
+                    stepContact()
+                }, 1500)
+            }, 500)
+        }
+
+        // Step 6: Contact Info
+        function stepContact() {
+            chatInput.disabled = false
+            sendBtn.disabled = false
+            chatInput.placeholder = "Your name..."
+
+            addBotMessage(
+                '<p>Great! I have everything I need to calculate your estimate.</p>' +
+                '<p>Before I show you the numbers, what\'s your name?</p>'
+            )
+
+            sendBtn.onclick = function() {
+                var name = chatInput.value.trim()
+                if (name) {
+                    conversationData.name = name
+                    addUserMessage('<p>' + name + '</p>')
+                    chatInput.value = ''
+                    chatInput.disabled = true
+                    sendBtn.disabled = true
+
+                    setTimeout(function() {
+                        askEmail()
+                    }, 500)
+                }
+            }
+
+            chatInput.onkeypress = function(e) {
+                if (e.key === 'Enter') {
+                    sendBtn.onclick()
+                }
+            }
+        }
+
+        // Ask for email
+        function askEmail() {
+            chatInput.disabled = false
+            sendBtn.disabled = false
+            chatInput.placeholder = "your@email.com"
+
+            addBotMessage(
+                '<p>Nice to meet you, <strong>' + conversationData.name + '</strong>!</p>' +
+                '<p>And your email address? (So I can send you a detailed report)</p>'
+            )
+
+            sendBtn.onclick = function() {
+                var email = chatInput.value.trim()
+                if (email) {
+                    conversationData.email = email
+                    addUserMessage('<p>' + email + '</p>')
+                    chatInput.value = ''
+                    chatInput.disabled = true
+                    sendBtn.disabled = true
+
+                    setTimeout(function() {
+                        showTyping()
+                        setTimeout(function() {
+                            removeTyping()
+                            showEstimate()
+                        }, 2000)
+                    }, 500)
+                }
+            }
+
+            chatInput.onkeypress = function(e) {
+                if (e.key === 'Enter') {
+                    sendBtn.onclick()
+                }
+            }
+        }
+
+        // Step 7: Show Estimate
+        function showEstimate() {
+            // Calculate mock estimate based on inputs
+            var baseRevenue = 45000
+
+            // Add for bedrooms
+            baseRevenue += (conversationData.bedrooms * 8000)
+
+            // Add for amenities
+            baseRevenue += (conversationData.amenities.length * 3000)
+
+            // Location multiplier
+            var locationMultipliers = {
+                'aspen': 1.5,
+                'breckenridge': 1.4,
+                'vail': 1.45,
+                'fairplay': 1.1
+            }
+            var locationLower = conversationData.location.toLowerCase()
+            var multiplier = 1.0
+            for (var key in locationMultipliers) {
+                if (locationLower.includes(key)) {
+                    multiplier = locationMultipliers[key]
+                    break
+                }
+            }
+            baseRevenue = Math.round(baseRevenue * multiplier)
+
+            // Format number with commas
+            var formattedRevenue = '$' + baseRevenue.toLocaleString()
+            var lowEstimate = '$' + Math.round(baseRevenue * 0.85).toLocaleString()
+            var highEstimate = '$' + Math.round(baseRevenue * 1.15).toLocaleString()
+
+            addBotMessage(
+                '<p><strong>🎉 Here\'s your estimated annual revenue!</strong></p>' +
+                '<div class="revenue-card">' +
+                    '<div class="revenue-label">Projected Annual Revenue</div>' +
+                    '<div class="revenue-amount">' + formattedRevenue + '</div>' +
+                    '<div class="revenue-label">Range: ' + lowEstimate + ' - ' + highEstimate + '</div>' +
+                    '<div class="revenue-details">' +
+                        '<h4>What This Includes:</h4>' +
+                        '<ul>' +
+                            '<li>Professional marketing on 15+ platforms</li>' +
+                            '<li>Dynamic pricing optimization</li>' +
+                            '<li>Full property management services</li>' +
+                            '<li>Professional cleaning & maintenance</li>' +
+                            '<li>24/7 guest support</li>' +
+                        '</ul>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="info-card">' +
+                    '<strong>What\'s Next?</strong> We\'ll send a detailed breakdown to <strong>' + conversationData.email + '</strong> within 10 minutes. ' +
+                    'This will include seasonal trends, occupancy projections, and how we can help maximize your property\'s potential.' +
+                '</div>'
+            )
+
+            setTimeout(function() {
+                finalMessage()
+            }, 2000)
+        }
+
+        // Final message
+        function finalMessage() {
+            addBotMessage(
+                '<p>Thanks for chatting with me today, ' + conversationData.name + '!</p>' +
+                '<p>Our team will review your property details and reach out soon to discuss next steps.</p>' +
+                '<p><strong>Want to learn more right now?</strong></p>' +
+                '<div class="quick-replies">' +
+                    '<button class="quick-reply-btn" onclick="window.location.href=\'https://www.secondhomevacationrentals.com\'">Visit Our Website</button>' +
+                    '<button class="quick-reply-btn" onclick="window.location.href=\'tel:9705467336\'">Call Us: (970) 546-7336</button>' +
+                '</div>'
+            )
+        }
+
+        // Initialize chat
+        window.onload = function() {
+            stepWelcome()
+        }
+    </script>
+</body>
+</html>

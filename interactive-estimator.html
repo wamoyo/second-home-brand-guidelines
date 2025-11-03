@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Revenue Estimator - Second Home Vacation Rentals</title>
+    <style>
+        /* Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: 300;
+            font-size: 16px;
+            line-height: 1.75;
+            color: #333;
+            background-color: #f7f7f7;
+        }
+
+        /* Layout */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section {
+            padding: 50px 0;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><rect fill="%23333" width="1200" height="600"/><polygon fill="%23444" points="0,600 400,200 800,400 1200,100 1200,600"/><polygon fill="%23555" points="0,600 300,300 600,450 900,250 1200,350 1200,600"/></svg>');
+            background-size: cover;
+            background-position: center;
+            padding: 30px 0;
+            text-align: center;
+            color: #fff;
+        }
+
+        .header-logo {
+            max-width: 250px;
+            width: 100%;
+            height: auto;
+            filter: brightness(0) invert(1);
+            margin-bottom: 15px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 300;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 16px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Calculator Layout */
+        .calculator-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .controls-panel,
+        .results-panel {
+            background: #fff;
+            padding: 40px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            font-size: 28px;
+            margin-bottom: 25px;
+            color: #b3503e;
+            font-weight: 700;
+        }
+
+        h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            margin-top: 30px;
+            color: #b3503e;
+            font-weight: 700;
+        }
+
+        /* Form Controls */
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 700;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .label-with-value {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .value-display {
+            color: #00BF8F;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ccc;
+            border-radius: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 16px;
+            background-color: #fff;
+            transition: border-color 0.3s;
+            cursor: pointer;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #00BF8F;
+        }
+
+        /* Range Slider */
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            background: #ccc;
+            outline: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            background: #00BF8F;
+            cursor: pointer;
+            border-radius: 0;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            background: #00BF8F;
+            cursor: pointer;
+            border-radius: 0;
+            border: none;
+        }
+
+        /* Toggle Switches */
+        .amenities-toggles {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .toggle-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: #f7f7f7;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .toggle-item.active {
+            border-color: #00BF8F;
+            background: #f0fff0;
+        }
+
+        .toggle-label {
+            font-weight: 400;
+            color: #333;
+            font-size: 14px;
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 24px;
+            background: #ccc;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .toggle-switch.active {
+            background: #00BF8F;
+        }
+
+        .toggle-switch-slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: #fff;
+            transition: transform 0.3s;
+        }
+
+        .toggle-switch.active .toggle-switch-slider {
+            transform: translateX(26px);
+        }
+
+        /* Revenue Display */
+        .revenue-display {
+            text-align: center;
+            padding: 40px;
+            background: linear-gradient(135deg, #00BF8F 0%, #00a077 100%);
+            color: #fff;
+            margin-bottom: 30px;
+        }
+
+        .revenue-label {
+            font-size: 18px;
+            opacity: 0.9;
+            margin-bottom: 15px;
+        }
+
+        .revenue-amount {
+            font-size: 64px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+        }
+
+        .revenue-range {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        /* Chart */
+        .chart-container {
+            margin-top: 30px;
+        }
+
+        .chart-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .chart-bars {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .chart-bar-container {
+            text-align: center;
+        }
+
+        .chart-bar-wrapper {
+            height: 200px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        .chart-bar {
+            width: 100%;
+            background: #00BF8F;
+            transition: height 0.5s ease;
+            position: relative;
+        }
+
+        .chart-bar-value {
+            position: absolute;
+            top: -25px;
+            left: 0;
+            right: 0;
+            font-size: 14px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .chart-bar-label {
+            font-size: 14px;
+            color: #666;
+            font-weight: 700;
+        }
+
+        /* Breakdown List */
+        .revenue-breakdown {
+            background: #f7f7f7;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .revenue-breakdown h4 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .breakdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .breakdown-label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .breakdown-value {
+            font-size: 14px;
+            font-weight: 700;
+            color: #00BF8F;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: #f7f7f7;
+            padding: 30px;
+            text-align: center;
+            margin-top: 30px;
+            border-left: 4px solid #00BF8F;
+        }
+
+        .cta-section h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .cta-section p {
+            margin-bottom: 20px;
+            color: #666;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 15px 40px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 0;
+            background-color: #00BF8F;
+            color: #fff;
+        }
+
+        .button:hover {
+            background-color: #00a077;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #000;
+            color: #999;
+            padding: 30px 0;
+            text-align: center;
+        }
+
+        .footer p {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .footer a {
+            color: #00BF8F;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .calculator-container {
+                grid-template-columns: 1fr;
+            }
+
+            .amenities-toggles {
+                grid-template-columns: 1fr;
+            }
+
+            .chart-bars {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .controls-panel,
+            .results-panel {
+                padding: 25px;
+            }
+
+            .revenue-amount {
+                font-size: 48px;
+            }
+
+            .chart-bars {
+                grid-template-columns: 1fr;
+            }
+
+            .chart-bar-wrapper {
+                height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <img src="logo-charcoal-500.png" alt="Second Home Vacation Rentals" class="header-logo">
+            <h1>Interactive Revenue Estimator</h1>
+            <p>Adjust the controls and watch your revenue estimate update in real-time</p>
+        </div>
+    </header>
+
+    <!-- Calculator Section -->
+    <section class="section">
+        <div class="container">
+            <div class="calculator-container">
+                <!-- Controls Panel -->
+                <div class="controls-panel">
+                    <h2>Property Configuration</h2>
+
+                    <div class="form-group">
+                        <label for="propertyType">Property Type</label>
+                        <select id="propertyType" onchange="updateEstimate()">
+                            <option value="cabin">Cabin</option>
+                            <option value="house" selected>House</option>
+                            <option value="condo">Condo</option>
+                            <option value="chalet">Chalet</option>
+                            <option value="townhome">Townhome</option>
+                            <option value="lodge">Lodge</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="location">Location</label>
+                        <select id="location" onchange="updateEstimate()">
+                            <option value="fairplay">Fairplay</option>
+                            <option value="breckenridge">Breckenridge</option>
+                            <option value="aspen">Aspen</option>
+                            <option value="vail">Vail</option>
+                            <option value="steamboat">Steamboat Springs</option>
+                            <option value="other">Other Colorado Mountain Area</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="label-with-value">
+                            <label for="bedrooms">Bedrooms</label>
+                            <span class="value-display" id="bedroomsValue">3</span>
+                        </div>
+                        <input type="range" id="bedrooms" min="1" max="8" value="3" oninput="updateEstimate()">
+                    </div>
+
+                    <div class="form-group">
+                        <div class="label-with-value">
+                            <label for="bathrooms">Bathrooms</label>
+                            <span class="value-display" id="bathroomsValue">2</span>
+                        </div>
+                        <input type="range" id="bathrooms" min="1" max="6" step="0.5" value="2" oninput="updateEstimate()">
+                    </div>
+
+                    <div class="form-group">
+                        <div class="label-with-value">
+                            <label for="quality">Property Quality</label>
+                            <span class="value-display" id="qualityValue">Standard</span>
+                        </div>
+                        <input type="range" id="quality" min="1" max="5" value="3" oninput="updateEstimate()">
+                    </div>
+
+                    <h3>Premium Amenities</h3>
+                    <div class="amenities-toggles">
+                        <div class="toggle-item" id="toggle-hotTub">
+                            <span class="toggle-label">🛁 Hot Tub</span>
+                            <div class="toggle-switch" onclick="toggleAmenity('hotTub')">
+                                <div class="toggle-switch-slider"></div>
+                            </div>
+                        </div>
+                        <div class="toggle-item" id="toggle-mountainViews">
+                            <span class="toggle-label">🏔️ Mountain Views</span>
+                            <div class="toggle-switch" onclick="toggleAmenity('mountainViews')">
+                                <div class="toggle-switch-slider"></div>
+                            </div>
+                        </div>
+                        <div class="toggle-item" id="toggle-gameRoom">
+                            <span class="toggle-label">🎮 Game Room</span>
+                            <div class="toggle-switch" onclick="toggleAmenity('gameRoom')">
+                                <div class="toggle-switch-slider"></div>
+                            </div>
+                        </div>
+                        <div class="toggle-item" id="toggle-skiInOut">
+                            <span class="toggle-label">⛷️ Ski In/Out</span>
+                            <div class="toggle-switch" onclick="toggleAmenity('skiInOut')">
+                                <div class="toggle-switch-slider"></div>
+                            </div>
+                        </div>
+                        <div class="toggle-item" id="toggle-fireplace">
+                            <span class="toggle-label">🔥 Fireplace</span>
+                            <div class="toggle-switch" onclick="toggleAmenity('fireplace')">
+                                <div class="toggle-switch-slider"></div>
+                            </div>
+                        </div>
+                        <div class="toggle-item" id="toggle-deck">
+                            <span class="toggle-label">🪑 Deck/Patio</span>
+                            <div class="toggle-switch" onclick="toggleAmenity('deck')">
+                                <div class="toggle-switch-slider"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Panel -->
+                <div class="results-panel">
+                    <h2>Your Estimated Revenue</h2>
+
+                    <div class="revenue-display">
+                        <div class="revenue-label">Projected Annual Revenue</div>
+                        <div class="revenue-amount" id="revenueAmount">$0</div>
+                        <div class="revenue-range" id="revenueRange">Range: $0 - $0</div>
+                    </div>
+
+                    <div class="revenue-breakdown">
+                        <h4>Revenue Breakdown</h4>
+                        <div class="breakdown-item">
+                            <span class="breakdown-label">Base Rate</span>
+                            <span class="breakdown-value" id="breakdownBase">$0</span>
+                        </div>
+                        <div class="breakdown-item">
+                            <span class="breakdown-label">Location Premium</span>
+                            <span class="breakdown-value" id="breakdownLocation">$0</span>
+                        </div>
+                        <div class="breakdown-item">
+                            <span class="breakdown-label">Size & Capacity</span>
+                            <span class="breakdown-value" id="breakdownSize">$0</span>
+                        </div>
+                        <div class="breakdown-item">
+                            <span class="breakdown-label">Quality Rating</span>
+                            <span class="breakdown-value" id="breakdownQuality">$0</span>
+                        </div>
+                        <div class="breakdown-item">
+                            <span class="breakdown-label">Premium Amenities</span>
+                            <span class="breakdown-value" id="breakdownAmenities">$0</span>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <div class="chart-title">Seasonal Revenue Distribution</div>
+                        <div class="chart-bars">
+                            <div class="chart-bar-container">
+                                <div class="chart-bar-wrapper">
+                                    <div class="chart-bar" id="barWinter">
+                                        <div class="chart-bar-value" id="valueWinter">$0</div>
+                                    </div>
+                                </div>
+                                <div class="chart-bar-label">Winter</div>
+                            </div>
+                            <div class="chart-bar-container">
+                                <div class="chart-bar-wrapper">
+                                    <div class="chart-bar" id="barSpring">
+                                        <div class="chart-bar-value" id="valueSpring">$0</div>
+                                    </div>
+                                </div>
+                                <div class="chart-bar-label">Spring</div>
+                            </div>
+                            <div class="chart-bar-container">
+                                <div class="chart-bar-wrapper">
+                                    <div class="chart-bar" id="barSummer">
+                                        <div class="chart-bar-value" id="valueSummer">$0</div>
+                                    </div>
+                                </div>
+                                <div class="chart-bar-label">Summer</div>
+                            </div>
+                            <div class="chart-bar-container">
+                                <div class="chart-bar-wrapper">
+                                    <div class="chart-bar" id="barFall">
+                                        <div class="chart-bar-value" id="valueFall">$0</div>
+                                    </div>
+                                </div>
+                                <div class="chart-bar-label">Fall</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cta-section">
+                        <h3>Ready to Get Started?</h3>
+                        <p>Get a detailed, personalized revenue analysis from our team. We'll send you a comprehensive breakdown within 10 minutes.</p>
+                        <a href="revenue-estimator.html" class="button">Request Detailed Estimate →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Second Home Vacation Rentals. All rights reserved.</p>
+            <p style="margin-top: 10px;">
+                Questions? Call us at <a href="tel:9705467336">(970) 546-7336</a> or visit
+                <a href="https://www.secondhomevacationrentals.com" target="_blank">secondhomevacationrentals.com</a>
+            </p>
+            <p style="margin-top: 20px;">
+                <a href="index.html">← Back to Brand Guidelines</a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        var amenities = {
+            hotTub: false,
+            mountainViews: false,
+            gameRoom: false,
+            skiInOut: false,
+            fireplace: false,
+            deck: false
+        }
+
+        // Toggle amenity
+        function toggleAmenity(amenity) {
+            amenities[amenity] = !amenities[amenity]
+
+            var toggleItem = document.getElementById('toggle-' + amenity)
+            var toggleSwitch = toggleItem.querySelector('.toggle-switch')
+
+            if (amenities[amenity]) {
+                toggleItem.classList.add('active')
+                toggleSwitch.classList.add('active')
+            } else {
+                toggleItem.classList.remove('active')
+                toggleSwitch.classList.remove('active')
+            }
+
+            updateEstimate()
+        }
+
+        // Update estimate
+        function updateEstimate() {
+            // Get values
+            var bedrooms = parseInt(document.getElementById('bedrooms').value)
+            var bathrooms = parseFloat(document.getElementById('bathrooms').value)
+            var quality = parseInt(document.getElementById('quality').value)
+            var location = document.getElementById('location').value
+
+            // Update displays
+            document.getElementById('bedroomsValue').textContent = bedrooms
+            document.getElementById('bathroomsValue').textContent = bathrooms
+
+            var qualityLabels = ['Budget', 'Economy', 'Standard', 'Premium', 'Luxury']
+            document.getElementById('qualityValue').textContent = qualityLabels[quality - 1]
+
+            // Calculate revenue
+            var baseRate = 35000
+
+            // Location multipliers
+            var locationMultipliers = {
+                'aspen': 1.6,
+                'vail': 1.5,
+                'breckenridge': 1.4,
+                'steamboat': 1.35,
+                'fairplay': 1.1,
+                'other': 1.0
+            }
+            var locationMultiplier = locationMultipliers[location] || 1.0
+            var locationBonus = baseRate * (locationMultiplier - 1)
+
+            // Size bonus
+            var sizeBonus = (bedrooms * 7000) + (bathrooms * 3000)
+
+            // Quality multiplier
+            var qualityMultiplier = 0.7 + (quality * 0.15)
+            var qualityBonus = (baseRate + locationBonus + sizeBonus) * (qualityMultiplier - 1)
+
+            // Amenities bonus
+            var amenitiesCount = Object.values(amenities).filter(function(v) { return v }).length
+            var amenitiesBonus = amenitiesCount * 4000
+
+            // Total
+            var totalRevenue = Math.round(baseRate + locationBonus + sizeBonus + qualityBonus + amenitiesBonus)
+
+            // Display total
+            var formattedRevenue = '$' + totalRevenue.toLocaleString()
+            var lowEstimate = '$' + Math.round(totalRevenue * 0.85).toLocaleString()
+            var highEstimate = '$' + Math.round(totalRevenue * 1.15).toLocaleString()
+
+            document.getElementById('revenueAmount').textContent = formattedRevenue
+            document.getElementById('revenueRange').textContent = 'Range: ' + lowEstimate + ' - ' + highEstimate
+
+            // Display breakdown
+            document.getElementById('breakdownBase').textContent = '$' + baseRate.toLocaleString()
+            document.getElementById('breakdownLocation').textContent = '$' + Math.round(locationBonus).toLocaleString()
+            document.getElementById('breakdownSize').textContent = '$' + Math.round(sizeBonus).toLocaleString()
+            document.getElementById('breakdownQuality').textContent = '$' + Math.round(qualityBonus).toLocaleString()
+            document.getElementById('breakdownAmenities').textContent = '$' + amenitiesBonus.toLocaleString()
+
+            // Update seasonal chart
+            var seasonalDistribution = {
+                winter: 0.35,  // 35% winter (ski season)
+                spring: 0.20,  // 20% spring
+                summer: 0.30,  // 30% summer
+                fall: 0.15     // 15% fall
+            }
+
+            var winterRevenue = Math.round(totalRevenue * seasonalDistribution.winter)
+            var springRevenue = Math.round(totalRevenue * seasonalDistribution.spring)
+            var summerRevenue = Math.round(totalRevenue * seasonalDistribution.summer)
+            var fallRevenue = Math.round(totalRevenue * seasonalDistribution.fall)
+
+            var maxSeasonal = Math.max(winterRevenue, springRevenue, summerRevenue, fallRevenue)
+
+            // Update bars
+            document.getElementById('barWinter').style.height = ((winterRevenue / maxSeasonal) * 100) + '%'
+            document.getElementById('valueWinter').textContent = '$' + (winterRevenue / 1000).toFixed(0) + 'k'
+
+            document.getElementById('barSpring').style.height = ((springRevenue / maxSeasonal) * 100) + '%'
+            document.getElementById('valueSpring').textContent = '$' + (springRevenue / 1000).toFixed(0) + 'k'
+
+            document.getElementById('barSummer').style.height = ((summerRevenue / maxSeasonal) * 100) + '%'
+            document.getElementById('valueSummer').textContent = '$' + (summerRevenue / 1000).toFixed(0) + 'k'
+
+            document.getElementById('barFall').style.height = ((fallRevenue / maxSeasonal) * 100) + '%'
+            document.getElementById('valueFall').textContent = '$' + (fallRevenue / 1000).toFixed(0) + 'k'
+        }
+
+        // Initialize on load
+        window.onload = function() {
+            updateEstimate()
+        }
+    </script>
+</body>
+</html>
