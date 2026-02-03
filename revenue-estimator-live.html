@@ -1,0 +1,2219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revenue Estimator - Second Home Vacation Rentals</title>
+
+    <!-- Leaflet.js CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin=""/>
+
+    <style>
+        /* Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: 300;
+            font-size: 16px;
+            line-height: 1.75;
+            color: #333;
+            background-color: #f7f7f7;
+        }
+
+        /* Layout */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section {
+            padding: 50px 0;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><rect fill="%23333" width="1200" height="600"/><polygon fill="%23444" points="0,600 400,200 800,400 1200,100 1200,600"/><polygon fill="%23555" points="0,600 300,300 600,450 900,250 1200,350 1200,600"/></svg>');
+            background-size: cover;
+            background-position: center;
+            padding: 30px 0;
+            text-align: center;
+            color: #fff;
+        }
+
+        .header-logo {
+            max-width: 250px;
+            width: 100%;
+            height: auto;
+            filter: brightness(0) invert(1);
+            margin-bottom: 15px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 300;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 16px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            background: #fff;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .progress-bar-wrapper {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .progress-step {
+            flex: 1;
+            text-align: center;
+            font-size: 12px;
+            color: #999;
+            font-weight: 700;
+            position: relative;
+        }
+
+        .progress-step.active {
+            color: #00BF8F;
+        }
+
+        .progress-step.completed {
+            color: #00BF8F;
+        }
+
+        .progress-step-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #ccc;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 8px auto;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .progress-step.active .progress-step-number {
+            background: #00BF8F;
+        }
+
+        .progress-step.completed .progress-step-number {
+            background: #00BF8F;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: #ccc;
+            position: relative;
+            border-radius: 0;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: #00BF8F;
+            transition: width 0.3s ease;
+            border-radius: 0;
+        }
+
+        /* Slide Container */
+        .slide-container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 0;
+            min-height: 500px;
+            position: relative;
+        }
+
+        .slide {
+            display: none;
+            animation: slideIn 0.3s ease-in;
+            padding: 20px 0;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        h2 {
+            font-size: 32px;
+            margin-bottom: 15px;
+            color: #b3503e;
+            font-weight: 700;
+        }
+
+        h3 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #b3503e;
+            font-weight: 700;
+        }
+
+        .slide-description {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 700;
+            color: #333;
+            font-size: 16px;
+        }
+
+        label .required {
+            color: #b3503e;
+            font-weight: 700;
+        }
+
+        label .optional {
+            color: #999;
+            font-weight: 400;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ccc;
+            border-radius: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 16px;
+            background-color: #fff;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="tel"]:focus,
+        input[type="number"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #00BF8F;
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: #ccc;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        /* Property Type Cards */
+        .property-type-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .property-type-card {
+            background: #f7f7f7;
+            border: 2px solid #ccc;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .property-type-card:hover,
+        .property-type-card.selected {
+            border-color: #00BF8F;
+            background: #f0fff0;
+        }
+
+        .property-type-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .property-type-label {
+            font-size: 16px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        /* Amenities Grid */
+        .amenities-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .amenity-checkbox {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: #f7f7f7;
+            border: 2px solid #ccc;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .amenity-checkbox:hover {
+            border-color: #00BF8F;
+            background: #f0fff0;
+        }
+
+        .amenity-checkbox.selected {
+            border-color: #00BF8F;
+            background: #00BF8F;
+            color: #fff;
+        }
+
+        .amenity-checkbox input[type="checkbox"] {
+            width: auto;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .amenity-checkbox label {
+            margin: 0;
+            font-weight: 400;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        /* Navigation Buttons */
+        .slide-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            gap: 15px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 15px 40px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 0;
+        }
+
+        .button-primary {
+            background-color: #00BF8F;
+            color: #fff;
+        }
+
+        .button-primary:hover {
+            background-color: #00a077;
+        }
+
+        .button-primary:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .button-secondary {
+            background-color: #ccc;
+            color: #333;
+        }
+
+        .button-secondary:hover {
+            background-color: #bbb;
+        }
+
+        .button-secondary:disabled {
+            background-color: #eee;
+            color: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* Info Box */
+        .info-box {
+            background: #f7f7f7;
+            border-left: 4px solid #00BF8F;
+            padding: 20px;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+
+        .info-box strong {
+            color: #00BF8F;
+        }
+
+        /* Location Autocomplete */
+        .location-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #fff;
+            border: 2px solid #00BF8F;
+            border-top: none;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 9999;
+            display: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .location-suggestions.active {
+            display: block;
+        }
+
+        .location-suggestion-item {
+            padding: 12px;
+            cursor: pointer;
+            border-bottom: 1px solid #f7f7f7;
+            transition: background 0.2s;
+        }
+
+        .location-suggestion-item:hover {
+            background: #f0fff0;
+        }
+
+        /* Map */
+        .map-container {
+            margin: 20px 0;
+            border: 2px solid #ccc;
+            background: #f7f7f7;
+            height: 500px;
+            position: relative;
+        }
+
+        #propertyMap {
+            width: 100%;
+            height: 100%;
+            border-radius: 0;
+        }
+
+        .custom-marker {
+            background-color: #00BF8F;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 3px solid #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        .leaflet-control-attribution {
+            font-size: 8px !important;
+            opacity: 0.5;
+            background: rgba(255, 255, 255, 0.7) !important;
+            padding: 2px 4px !important;
+        }
+
+        /* Star Rating */
+        .star-rating-container {
+            text-align: center;
+            padding: 30px;
+            background: #f7f7f7;
+        }
+
+        .star-rating {
+            font-size: 60px;
+            letter-spacing: 10px;
+            display: inline-flex;
+            gap: 5px;
+        }
+
+        .star-wrapper {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .star {
+            color: #ccc;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .star.full {
+            color: #00BF8F;
+        }
+
+        .star.half {
+            background: linear-gradient(90deg, #00BF8F 50%, #ccc 50%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .star-rating-label {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: 700;
+            color: #666;
+        }
+
+        /* Photo Upload */
+        .photo-upload-area {
+            border: 2px dashed #ccc;
+            padding: 40px;
+            text-align: center;
+            background: #f7f7f7;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .photo-upload-area:hover {
+            border-color: #00BF8F;
+            background: #f0fff0;
+        }
+
+        .photo-upload-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .photo-upload-text {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .photo-upload-hint {
+            font-size: 14px;
+            color: #999;
+        }
+
+        .photo-preview-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .photo-preview-item {
+            position: relative;
+            aspect-ratio: 1;
+            border: 2px solid #ccc;
+            overflow: hidden;
+        }
+
+        .photo-preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .photo-preview-remove {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #b3503e;
+            color: #fff;
+            border: none;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        /* ========================================
+           RESULTS SLIDE STYLES (from output-compact.html)
+           ======================================== */
+
+        .results-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Hero Stat */
+        .hero-stat {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 40px;
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .hero-label {
+            font-size: 18px;
+            color: #999;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 700;
+        }
+
+        .hero-amount {
+            font-size: 72px;
+            font-weight: 700;
+            color: #00BF8F;
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+
+        .hero-period {
+            font-size: 20px;
+            color: #666;
+        }
+
+        .hero-property {
+            font-size: 16px;
+            color: #999;
+            margin-top: 10px;
+        }
+
+        /* Key Metrics */
+        .metrics-compact {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .metric-compact {
+            text-align: center;
+        }
+
+        .metric-compact-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .metric-compact-label {
+            font-size: 12px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 5px;
+        }
+
+        /* Content Sections */
+        .content-section {
+            margin-bottom: 50px;
+            background: #fff;
+            padding: 40px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .content-section h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #b3503e;
+            margin-bottom: 20px;
+        }
+
+        .content-section p {
+            margin-bottom: 20px;
+            color: #666;
+        }
+
+        /* Donut Chart */
+        .chart-card {
+            background: #f7f7f7;
+            padding: 30px 25px;
+            margin-top: 20px;
+            border: 3px solid #ddd;
+        }
+
+        .donut-chart {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .donut-visual {
+            position: relative;
+            width: 200px;
+            height: 200px;
+        }
+
+        .donut-legend {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        .legend-text {
+            font-size: 14px;
+            color: #333;
+        }
+
+        .legend-value {
+            font-weight: 700;
+            margin-left: auto;
+        }
+
+        /* Toggle Grid */
+        .toggle-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .toggle-card {
+            background: #f7f7f7;
+            padding: 25px;
+            border: 3px solid #ddd;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .toggle-card.active {
+            border-color: #00BF8F;
+            background: #e6f9f4;
+        }
+
+        .toggle-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .toggle-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .toggle-switch {
+            width: 50px;
+            height: 26px;
+            background: #ccc;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .toggle-switch.active {
+            background: #00BF8F;
+        }
+
+        .toggle-switch-knob {
+            width: 22px;
+            height: 22px;
+            background: #fff;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            transition: all 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .toggle-switch.active .toggle-switch-knob {
+            left: 26px;
+        }
+
+        .toggle-description {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+
+        .toggle-boost {
+            font-size: 15px;
+            font-weight: 700;
+            color: #00BF8F;
+        }
+
+        /* Compact Estimate Display */
+        .compact-estimate {
+            background: #f7f7f7;
+            padding: 30px;
+            text-align: center;
+            margin: 30px 0;
+            border: 3px solid #ddd;
+        }
+
+        .compact-estimate.updated {
+            border-color: #00BF8F;
+            background: #e6f9f4;
+        }
+
+        .compact-estimate-label {
+            font-size: 14px;
+            color: #999;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        .compact-estimate-value {
+            font-size: 48px;
+            font-weight: 700;
+            color: #00BF8F;
+            line-height: 1;
+        }
+
+        .compact-estimate-note {
+            font-size: 13px;
+            color: #666;
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: #fff;
+            padding: 50px 20px 60px 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .cta-section h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .cta-section p {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 15px 40px;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 700;
+            transition: all 0.3s;
+            margin: 0 10px 10px 10px;
+        }
+
+        .cta-button-primary {
+            background: #00BF8F;
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(0,191,143,0.3);
+        }
+
+        .cta-button-primary:hover {
+            background: #00a077;
+            box-shadow: 0 6px 16px rgba(0,191,143,0.4);
+            transform: translateY(-2px);
+        }
+
+        .cta-button-secondary {
+            background: transparent;
+            color: #333;
+            border: 2px solid #333;
+        }
+
+        .cta-button-secondary:hover {
+            background: #333;
+            color: #fff;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #000;
+            color: #999;
+            padding: 30px 0;
+            text-align: center;
+        }
+
+        .footer p {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .footer a {
+            color: #00BF8F;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .slide {
+                padding: 20px 0;
+            }
+
+            h2 {
+                font-size: 24px;
+            }
+
+            .property-type-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .amenities-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .progress-step {
+                font-size: 10px;
+            }
+
+            .progress-step-number {
+                width: 25px;
+                height: 25px;
+                font-size: 12px;
+            }
+
+            .slide-navigation {
+                flex-direction: column-reverse;
+            }
+
+            .button {
+                width: 100%;
+                text-align: center;
+            }
+
+            .star-rating {
+                font-size: 50px;
+                letter-spacing: 5px;
+            }
+
+            .hero-amount {
+                font-size: 56px;
+            }
+
+            .donut-chart {
+                flex-direction: column;
+            }
+
+            .toggle-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .compact-estimate-value {
+                font-size: 36px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <img src="logo-charcoal-500.png" alt="Second Home Vacation Rentals" class="header-logo">
+            <h1>Revenue Estimator</h1>
+            <p>Answer a few quick questions to get your personalized revenue estimate</p>
+        </div>
+    </header>
+
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        <div class="progress-bar-wrapper">
+            <div class="progress-steps" id="progressSteps">
+                <!-- Progress steps will be dynamically generated -->
+            </div>
+            <div class="progress-bar">
+                <div class="progress-bar-fill" id="progressBarFill" style="width: 0%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slides Section -->
+    <section class="section">
+        <div class="container">
+            <div class="slide-container">
+                <!-- Slide 1: Contact Info -->
+                <div class="slide active" data-slide="1">
+                    <h2>Let's Get Started</h2>
+                    <p class="slide-description">First, we'll need your contact information so we can send you the detailed estimate.</p>
+
+                    <div class="info-box" style="margin-bottom: 30px;">
+                        <strong>🔒 Your Privacy:</strong> We will use your email for the sole purpose of sending your estimate and never share with third parties.
+                    </div>
+
+                    <div class="form-group">
+                        <label for="firstName">First Name <span class="required">*</span></label>
+                        <input type="text" id="firstName" placeholder="John" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="lastName">Last Name <span class="required">*</span></label>
+                        <input type="text" id="lastName" placeholder="Smith" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email Address <span class="required">*</span></label>
+                        <input type="email" id="email" placeholder="your@email.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone Number <span class="required">*</span></label>
+                        <input type="tel" id="phone" placeholder="(970) 555-1234" required>
+                    </div>
+
+                    <div class="slide-navigation">
+                        <button class="button button-secondary" onclick="prevSlide()" disabled>← Previous</button>
+                        <button class="button button-primary" onclick="nextSlide()">Next →</button>
+                    </div>
+                </div>
+
+                <!-- Slide 2: Property Type -->
+                <div class="slide" data-slide="2">
+                    <h2>Property Type</h2>
+                    <p class="slide-description">What type of property do you have?</p>
+
+                    <div class="property-type-grid">
+                        <div class="property-type-card" onclick="selectPropertyType(this, 'cabin')">
+                            <div class="property-type-icon">🏕️</div>
+                            <div class="property-type-label">Cabin</div>
+                        </div>
+                        <div class="property-type-card" onclick="selectPropertyType(this, 'house')">
+                            <div class="property-type-icon">🏠</div>
+                            <div class="property-type-label">House</div>
+                        </div>
+                        <div class="property-type-card" onclick="selectPropertyType(this, 'condo')">
+                            <div class="property-type-icon">🏢</div>
+                            <div class="property-type-label">Condo</div>
+                        </div>
+                        <div class="property-type-card" onclick="selectPropertyType(this, 'chalet')">
+                            <div class="property-type-icon">⛰️</div>
+                            <div class="property-type-label">Chalet</div>
+                        </div>
+                        <div class="property-type-card" onclick="selectPropertyType(this, 'townhome')">
+                            <div class="property-type-icon">🏘️</div>
+                            <div class="property-type-label">Townhome</div>
+                        </div>
+                        <div class="property-type-card" onclick="selectPropertyType(this, 'lodge')">
+                            <div class="property-type-icon">🏔️</div>
+                            <div class="property-type-label">Lodge</div>
+                        </div>
+                    </div>
+
+                    <div class="slide-navigation">
+                        <button class="button button-secondary" onclick="prevSlide()">← Previous</button>
+                        <button class="button button-primary" onclick="nextSlide()" id="propertyTypeNext" disabled>Next →</button>
+                    </div>
+                </div>
+
+                <!-- Slide 3: Location -->
+                <div class="slide" data-slide="3">
+                    <h2>Property Location</h2>
+                    <p class="slide-description">Enter your property address or click on the map below.</p>
+
+                    <div class="form-group">
+                        <label for="locationSearch">Property Address <span class="required">*</span></label>
+                        <input type="text" id="locationSearch" placeholder="Start typing address..." required autocomplete="off" oninput="handleLocationInput()">
+                        <div id="locationSuggestions" class="location-suggestions"></div>
+                    </div>
+
+                    <div class="info-box" style="margin-bottom: 20px;">
+                        <strong>Service Area:</strong> We serve Park County, Colorado - specifically the Alma and Placer Valley area along Highway 9 between Breckenridge and Fairplay.
+                    </div>
+
+                    <div class="map-container">
+                        <div id="propertyMap"></div>
+                    </div>
+
+                    <div class="slide-navigation">
+                        <button class="button button-secondary" onclick="prevSlide()">← Previous</button>
+                        <button class="button button-primary" onclick="nextSlide()">Next →</button>
+                    </div>
+                </div>
+
+                <!-- Slide 4: Property Details -->
+                <div class="slide" data-slide="4">
+                    <h2>Property Details</h2>
+                    <p class="slide-description">Tell us about your property's size and capacity.</p>
+
+                    <div class="form-group">
+                        <label for="bedrooms">Bedrooms <span class="required">*</span></label>
+                        <select id="bedrooms" required>
+                            <option value="">Select number</option>
+                            <option value="1">1 Bedroom</option>
+                            <option value="2">2 Bedrooms</option>
+                            <option value="3">3 Bedrooms</option>
+                            <option value="4">4 Bedrooms</option>
+                            <option value="5">5 Bedrooms</option>
+                            <option value="6">6+ Bedrooms</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bathrooms">Bathrooms <span class="required">*</span></label>
+                        <select id="bathrooms" required>
+                            <option value="">Select number</option>
+                            <option value="1">1 Bathroom</option>
+                            <option value="1.5">1.5 Bathrooms</option>
+                            <option value="2">2 Bathrooms</option>
+                            <option value="2.5">2.5 Bathrooms</option>
+                            <option value="3">3 Bathrooms</option>
+                            <option value="3.5">3.5 Bathrooms</option>
+                            <option value="4">4+ Bathrooms</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="maxGuests">Maximum Guest Capacity <span class="required">*</span></label>
+                        <input type="number" id="maxGuests" placeholder="8" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="squareFootage">Square Footage <span class="optional">(optional)</span></label>
+                        <input type="number" id="squareFootage" placeholder="2500">
+                    </div>
+
+                    <div class="slide-navigation">
+                        <button class="button button-secondary" onclick="prevSlide()">← Previous</button>
+                        <button class="button button-primary" onclick="nextSlide()">Next →</button>
+                    </div>
+                </div>
+
+                <!-- Slide 5: Quality Assessment -->
+                <div class="slide" data-slide="5">
+                    <h2>Property Quality</h2>
+                    <p class="slide-description">Help us assess your property's quality. Choose a star rating or upload photos for our team to review.</p>
+
+                    <h3 style="margin-top: 20px; margin-bottom: 15px;">Option 1: Star Rating</h3>
+                    <p style="font-size: 14px; color: #666; margin-bottom: 15px; text-align: center;">Click left side of star for half-star, right side for full star</p>
+                    <div class="star-rating-container">
+                        <div class="star-rating" id="starRatingContainer">
+                            <!-- Stars will be generated by JavaScript -->
+                        </div>
+                        <div class="star-rating-label" id="starRatingLabel">Select a rating</div>
+                    </div>
+
+                    <div style="text-align: center; margin: 30px 0; color: #999; font-weight: 700;">— OR —</div>
+
+                    <h3 style="margin-bottom: 15px;">Option 2: Upload Photos</h3>
+                    <p style="font-size: 14px; color: #666; margin-bottom: 15px;">Upload 3-10 photos and our team will assess the quality.</p>
+
+                    <div class="photo-upload-area" id="photoUploadArea" onclick="document.getElementById('qualityPhotos').click()">
+                        <div class="photo-upload-icon">📸</div>
+                        <div class="photo-upload-text">Click to upload photos</div>
+                        <div class="photo-upload-hint">JPG, PNG (3-10 photos recommended)</div>
+                    </div>
+                    <input type="file" id="qualityPhotos" multiple accept="image/*" style="display: none;" onchange="handlePhotoUpload()">
+                    <div class="photo-preview-list" id="photoPreviewList"></div>
+
+                    <div class="slide-navigation">
+                        <button class="button button-secondary" onclick="prevSlide()">← Previous</button>
+                        <button class="button button-primary" onclick="nextSlide()" id="qualityNext" disabled>Next →</button>
+                    </div>
+                </div>
+
+                <!-- Slide 6: Amenities & Additional Info -->
+                <div class="slide" data-slide="6">
+                    <h2>Amenities & Features</h2>
+                    <p class="slide-description">Select all amenities that apply to your property:</p>
+
+                    <div class="amenities-grid">
+                        <div class="amenity-checkbox" onclick="toggleAmenity(this, 'hot_tub')">
+                            <input type="checkbox" id="hotTub">
+                            <label for="hotTub">🛁 Hot Tub</label>
+                        </div>
+                        <div class="amenity-checkbox" onclick="toggleAmenity(this, 'game_room')">
+                            <input type="checkbox" id="gameRoom">
+                            <label for="gameRoom">🎮 Game Room</label>
+                        </div>
+                        <div class="amenity-checkbox" onclick="toggleAmenity(this, 'media_room')">
+                            <input type="checkbox" id="mediaRoom">
+                            <label for="mediaRoom">📺 Media Room</label>
+                        </div>
+                        <div class="amenity-checkbox" onclick="toggleAmenity(this, 'fireplace')">
+                            <input type="checkbox" id="fireplace">
+                            <label for="fireplace">🔥 Fireplace</label>
+                        </div>
+                        <div class="amenity-checkbox" onclick="toggleAmenity(this, 'mountain_views')">
+                            <input type="checkbox" id="mountainViews">
+                            <label for="mountainViews">🏔️ Mountain Views</label>
+                        </div>
+                        <div class="amenity-checkbox" onclick="toggleAmenity(this, 'deck')">
+                            <input type="checkbox" id="deck">
+                            <label for="deck">🪑 Deck/Patio</label>
+                        </div>
+                        <div class="amenity-checkbox" onclick="toggleAmenity(this, 'garage')">
+                            <input type="checkbox" id="garage">
+                            <label for="garage">🚗 Garage/Parking</label>
+                        </div>
+                        <div class="amenity-checkbox" onclick="toggleAmenity(this, 'wifi')">
+                            <input type="checkbox" id="wifi">
+                            <label for="wifi">📡 High-Speed WiFi</label>
+                        </div>
+                        <div class="amenity-checkbox" onclick="toggleAmenity(this, 'washer_dryer')">
+                            <input type="checkbox" id="washer">
+                            <label for="washer">🧺 Washer/Dryer</label>
+                        </div>
+                        <div class="amenity-checkbox" onclick="toggleAmenity(this, 'full_kitchen')">
+                            <input type="checkbox" id="kitchen">
+                            <label for="kitchen">🍳 Full Kitchen</label>
+                        </div>
+                        <div class="amenity-checkbox" onclick="toggleAmenity(this, 'pet_friendly')">
+                            <input type="checkbox" id="petFriendly">
+                            <label for="petFriendly">🐕 Pet Friendly</label>
+                        </div>
+                        <div class="amenity-checkbox" onclick="toggleAmenity(this, 'ski_in_out')">
+                            <input type="checkbox" id="skiIn">
+                            <label for="skiIn">⛷️ Ski In/Out</label>
+                        </div>
+                    </div>
+
+                    <h3 style="margin-top: 30px;">Additional Information</h3>
+                    <div class="form-group">
+                        <label for="additionalInfo">Special Features <span class="optional">(optional)</span></label>
+                        <textarea id="additionalInfo" placeholder="Recent renovations, proximity to attractions, unique features, etc."></textarea>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>What happens next?</strong> Click below to see your personalized revenue estimate instantly!
+                    </div>
+
+                    <div class="slide-navigation">
+                        <button class="button button-secondary" onclick="prevSlide()">← Previous</button>
+                        <button class="button button-primary" onclick="submitEstimate()">Get My Estimate →</button>
+                    </div>
+                </div>
+
+                <!-- Slide 7: RESULTS -->
+                <div class="slide" data-slide="7">
+                    <div class="results-container">
+                        <!-- Hero Stat -->
+                        <div class="hero-stat">
+                            <div class="hero-label">Annual Revenue Estimate for <span id="resultName">Your Property</span></div>
+                            <div class="hero-amount" id="resultAmount">$0</div>
+                            <div class="hero-period">Estimated Annual Gross Revenue</div>
+                            <div class="hero-property" id="resultAddress"></div>
+
+                            <!-- Key Metrics -->
+                            <div class="metrics-compact">
+                                <div class="metric-compact">
+                                    <div class="metric-compact-value" id="avgRate">$0</div>
+                                    <div class="metric-compact-label">Avg Nightly Rate</div>
+                                </div>
+                                <div class="metric-compact">
+                                    <div class="metric-compact-value" id="occupancy">0%</div>
+                                    <div class="metric-compact-label">Occupancy Rate</div>
+                                </div>
+                                <div class="metric-compact">
+                                    <div class="metric-compact-value" id="nightsBooked">0</div>
+                                    <div class="metric-compact-label">Nights Booked</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- How We Calculated -->
+                        <div class="content-section">
+                            <h2>How Did We Calculate This Estimate?</h2>
+                            <p>
+                                We built your revenue estimate by comparing your property to <span id="comparableCount">0</span> similar properties in our portfolio. This hands-on experience managing properties in Fairplay, Alma, and Como allows us to give a confident estimate.
+                            </p>
+                            <p>
+                                Your estimate takes into account your property's bedrooms, amenities, and quality rating. We've also factored in the unique seasonality of the Rocky Mountain region.
+                            </p>
+                        </div>
+
+                        <!-- Seasonality Chart -->
+                        <div class="content-section">
+                            <h2>Seasonal Revenue Distribution</h2>
+                            <p>Your estimated revenue broken down by season. Winter ski season (Nov-Mar) and summer activities (Jun-Aug) drive the highest revenue.</p>
+
+                            <div class="chart-card">
+                                <div class="donut-chart">
+                                    <div class="donut-visual">
+                                        <svg viewBox="0 0 200 200" id="donutSvg">
+                                            <!-- Winter (Nov-Mar): 54% -->
+                                            <circle cx="100" cy="100" r="80" fill="none" stroke="#00BF8F" stroke-width="40"
+                                                stroke-dasharray="271 232" transform="rotate(-90 100 100)"/>
+                                            <!-- Spring/Mud (Apr-May): 7% -->
+                                            <circle cx="100" cy="100" r="80" fill="none" stroke="#999" stroke-width="40"
+                                                stroke-dasharray="35 468" stroke-dashoffset="-271" transform="rotate(-90 100 100)"/>
+                                            <!-- Summer (Jun-Aug): 29% -->
+                                            <circle cx="100" cy="100" r="80" fill="none" stroke="#b3503e" stroke-width="40"
+                                                stroke-dasharray="146 357" stroke-dashoffset="-306" transform="rotate(-90 100 100)"/>
+                                            <!-- Fall (Sep-Oct): 10% -->
+                                            <circle cx="100" cy="100" r="80" fill="none" stroke="#ddd" stroke-width="40"
+                                                stroke-dasharray="50 453" stroke-dashoffset="-452" transform="rotate(-90 100 100)"/>
+                                            <!-- Center text -->
+                                            <text x="100" y="95" text-anchor="middle" font-size="24" font-weight="700" fill="#333" id="donutTotal">$0</text>
+                                            <text x="100" y="115" text-anchor="middle" font-size="12" fill="#666">Total</text>
+                                        </svg>
+                                    </div>
+                                    <div class="donut-legend">
+                                        <div class="legend-item">
+                                            <div class="legend-color" style="background: #00BF8F;"></div>
+                                            <div class="legend-text">Winter (Nov-Mar)</div>
+                                            <div class="legend-value" id="winterRevenue">$0</div>
+                                        </div>
+                                        <div class="legend-item">
+                                            <div class="legend-color" style="background: #999;"></div>
+                                            <div class="legend-text">Spring (Apr-May)</div>
+                                            <div class="legend-value" id="springRevenue">$0</div>
+                                        </div>
+                                        <div class="legend-item">
+                                            <div class="legend-color" style="background: #b3503e;"></div>
+                                            <div class="legend-text">Summer (Jun-Aug)</div>
+                                            <div class="legend-value" id="summerRevenue">$0</div>
+                                        </div>
+                                        <div class="legend-item">
+                                            <div class="legend-color" style="background: #ddd;"></div>
+                                            <div class="legend-text">Fall (Sep-Oct)</div>
+                                            <div class="legend-value" id="fallRevenue">$0</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Quick Tips -->
+                        <div class="content-section">
+                            <h2>Quick Tips for Boosting Your Revenue</h2>
+                            <p>
+                                Small improvements can make a big difference. Here are two features that consistently drive higher bookings and revenue:
+                            </p>
+
+                            <!-- Compact Estimate Display -->
+                            <div class="compact-estimate" id="compactEstimate">
+                                <div class="compact-estimate-label">Your Estimate</div>
+                                <div class="compact-estimate-value" id="compactValue">$0</div>
+                                <div class="compact-estimate-note" id="compactNote" style="display: none;">With selected improvements</div>
+                            </div>
+
+                            <div class="toggle-grid">
+                                <div class="toggle-card" id="hotTubCard">
+                                    <div class="toggle-header">
+                                        <div class="toggle-title">Hot Tub</div>
+                                        <div class="toggle-switch" id="hotTubSwitch">
+                                            <div class="toggle-switch-knob"></div>
+                                        </div>
+                                    </div>
+                                    <div class="toggle-description">
+                                        A hot tub is one of the most requested amenities for mountain properties. Perfect after a day of skiing or hiking.
+                                    </div>
+                                    <div class="toggle-boost">Revenue Boost: +1.5%</div>
+                                </div>
+
+                                <div class="toggle-card" id="petCard">
+                                    <div class="toggle-header">
+                                        <div class="toggle-title">Pet Friendly</div>
+                                        <div class="toggle-switch" id="petSwitch">
+                                            <div class="toggle-switch-knob"></div>
+                                        </div>
+                                    </div>
+                                    <div class="toggle-description">
+                                        Pet-friendly properties attract more families and longer stays. Many travelers won't book unless they can bring their furry friends.
+                                    </div>
+                                    <div class="toggle-boost">Revenue Boost: +1.75%</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- CTA Section -->
+                        <div class="cta-section">
+                            <h2>Ready to Get Started?</h2>
+                            <p>Second Home's local 7-day office, weekly inspections, professional cleaning, and 15+ marketing platforms make this revenue achievable.</p>
+                            <a href="https://www.secondhomevacationrentals.com/home-owners/" class="cta-button cta-button-primary">List Your Property With Us</a>
+                            <a href="https://calendly.com/secondhomevacationrentals" class="cta-button cta-button-secondary">Book A Meeting To Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Second Home Vacation Rentals. All rights reserved.</p>
+            <p style="margin-top: 10px;">
+                Questions? Call us at <a href="tel:9705467336">(970) 546-7336</a> or visit
+                <a href="https://www.secondhomevacationrentals.com" target="_blank">secondhomevacationrentals.com</a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // ========================================
+        // STATE VARIABLES
+        // ========================================
+        var currentSlide = 1
+        var totalSlides = 7
+        var formData = {
+            firstName: '',
+            lastName: '',
+            email: '',
+            phone: '',
+            propertyType: null,
+            address: '',
+            bedrooms: 0,
+            bathrooms: 0,
+            maxGuests: 0,
+            squareFootage: null,
+            qualityRating: null,
+            amenities: [],
+            additionalInfo: ''
+        }
+
+        // Properties data from JSON
+        var propertiesData = []
+
+        // Address autocomplete
+        var addresses = []
+        var fuse = null
+        var selectedAddress = null
+        var searchTimeout = null
+        var isSelectingAddress = false
+
+        // Map
+        var map = null
+        var propertyMarker = null
+
+        // Results state
+        var baseEstimate = 0
+        var hotTubActive = false
+        var petActive = false
+        var hotTubBoost = 1.5
+        var petBoost = 1.75
+
+        // ========================================
+        // DATA LOADING
+        // ========================================
+
+        // Pure: loads properties data from JSON
+        function loadPropertiesData () {
+            fetch('../properties-info/properties-with-revenue.json')
+                .then(function (response) { return response.json() })
+                .then(function (data) {
+                    propertiesData = data.filter(function (p) {
+                        return p.revenue && p.revenue.annual
+                    })
+                    console.log('Loaded ' + propertiesData.length + ' properties with revenue data')
+                })
+                .catch(function (error) {
+                    console.error('Error loading properties data:', error)
+                })
+        }
+
+        // ========================================
+        // ESTIMATION ENGINE
+        // ========================================
+
+        // Breckenridge entrance coordinates (reference point for distance)
+        var BRECKENRIDGE_LAT = 39.4817
+        var BRECKENRIDGE_LNG = -106.0384
+
+        // Pure: calculates distance in miles using Haversine formula
+        function calculateDistance (lat1, lng1, lat2, lng2) {
+            var R = 3959 // Earth's radius in miles
+            var dLat = (lat2 - lat1) * Math.PI / 180
+            var dLng = (lng2 - lng1) * Math.PI / 180
+            var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                    Math.sin(dLng / 2) * Math.sin(dLng / 2)
+            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+            return R * c
+        }
+
+        // Pure: returns distance multiplier based on miles from Breckenridge
+        // Farther properties earn less due to lower demand
+        function getDistanceMultiplier (distanceMiles) {
+            if (distanceMiles <= 15) return 1.0    // Full estimate
+            if (distanceMiles <= 30) return 0.90   // 10% reduction
+            if (distanceMiles <= 45) return 0.75   // 25% reduction
+            return 0.60                             // 40% reduction for 45+ miles
+        }
+
+        // Pure: finds comparable properties based on input
+        function findComparables (input) {
+            var bedrooms = parseInt(input.bedrooms) || 3
+
+            // First try exact bedroom match
+            var comparables = propertiesData.filter(function (p) {
+                return p.bedrooms === bedrooms
+            })
+
+            // If fewer than 3, widen to ±1 bedroom
+            if (comparables.length < 3) {
+                comparables = propertiesData.filter(function (p) {
+                    return Math.abs(p.bedrooms - bedrooms) <= 1
+                })
+            }
+
+            // If still fewer than 3, use all properties
+            if (comparables.length < 3) {
+                comparables = propertiesData
+            }
+
+            return comparables
+        }
+
+        // Pure: gets annualized revenue for a property
+        // Prefers years with 11+ months, annualizes partial years
+        function getAnnualizedRevenue (property) {
+            var monthly = property.revenue.monthly
+            var annual = property.revenue.annual
+
+            // Count months per year
+            var yearMonths = {}
+            Object.keys(monthly).forEach(function (key) {
+                var year = key.split('-')[0]
+                yearMonths[year] = (yearMonths[year] || 0) + 1
+            })
+
+            // Find best year: prefer recent years with 11+ months
+            var candidates = ['2024', '2023', '2022']
+            var bestYear = null
+            var bestMonths = 0
+
+            // First pass: find years with 11+ months (prefer most recent)
+            for (var i = 0; i < candidates.length; i++) {
+                var year = candidates[i]
+                var months = yearMonths[year] || 0
+                if (months >= 11) {
+                    bestYear = year
+                    bestMonths = months
+                    break
+                }
+            }
+
+            // Second pass: if no year has 11+ months, use year with most months (min 6)
+            if (!bestYear) {
+                for (var j = 0; j < candidates.length; j++) {
+                    var yr = candidates[j]
+                    var mo = yearMonths[yr] || 0
+                    if (mo >= 6 && mo > bestMonths) {
+                        bestYear = yr
+                        bestMonths = mo
+                    }
+                }
+            }
+
+            if (!bestYear || !annual[bestYear]) {
+                return 0
+            }
+
+            // Annualize if less than 12 months
+            var yearRevenue = annual[bestYear]
+            if (bestMonths < 12) {
+                yearRevenue = (yearRevenue / bestMonths) * 12
+            }
+
+            return yearRevenue
+        }
+
+        // Pure: calculates estimate from comparables
+        // NOTE: Returns BASE estimate without hot_tub/pet_friendly boosts
+        // Those boosts are applied via toggle UI in updateToggleEstimate()
+        function calculateEstimate (comparables, input) {
+            // Get annualized revenue for each comparable
+            var revenues = comparables.map(function (p) {
+                return getAnnualizedRevenue(p)
+            }).filter(function (r) { return r > 0 })
+
+            if (revenues.length === 0) {
+                return { annualRevenue: 0, avgNightlyRate: 0, occupancyRate: 0, nightsBooked: 0, comparableCount: 0 }
+            }
+
+            // Calculate average
+            var sum = revenues.reduce(function (a, b) { return a + b }, 0)
+            var avgRevenue = sum / revenues.length
+
+            // Apply quality rating adjustment (if provided)
+            // Rating of 3 is baseline, 5 = +20%, 1 = -20%
+            if (input.qualityRating && input.qualityRating > 0) {
+                var qualityMultiplier = 1 + ((input.qualityRating - 3) * 0.1)
+                avgRevenue = avgRevenue * qualityMultiplier
+            }
+
+            // Apply distance adjustment (farther from Breckenridge = lower estimate)
+            var distanceMiles = 0
+            var distanceMultiplier = 1
+            if (input.latitude && input.longitude) {
+                distanceMiles = calculateDistance(input.latitude, input.longitude, BRECKENRIDGE_LAT, BRECKENRIDGE_LNG)
+                distanceMultiplier = getDistanceMultiplier(distanceMiles)
+                avgRevenue = avgRevenue * distanceMultiplier
+            }
+
+            // NOTE: hot_tub and pet_friendly boosts are NOT applied here
+            // They are handled by the toggle UI so users can see the impact
+
+            // Round to nearest 100
+            var annualRevenue = Math.round(avgRevenue / 100) * 100
+
+            // Derive other metrics
+            var occupancyRate = 65 // baseline
+            var nightsBooked = Math.round(365 * (occupancyRate / 100))
+            var avgNightlyRate = Math.round(annualRevenue / nightsBooked)
+
+            return {
+                annualRevenue: annualRevenue,
+                avgNightlyRate: avgNightlyRate,
+                occupancyRate: occupancyRate,
+                nightsBooked: nightsBooked,
+                comparableCount: comparables.length,
+                distanceMiles: Math.round(distanceMiles),
+                distanceMultiplier: distanceMultiplier
+            }
+        }
+
+        // Pure: calculates seasonal breakdown
+        function calculateSeasonality (annualRevenue) {
+            return {
+                winter: Math.round(annualRevenue * 0.54),
+                spring: Math.round(annualRevenue * 0.07),
+                summer: Math.round(annualRevenue * 0.29),
+                fall: Math.round(annualRevenue * 0.10)
+            }
+        }
+
+        // Pure: formats number as currency
+        function formatCurrency (amount) {
+            return '$' + amount.toLocaleString()
+        }
+
+        // Pure: formats number as short currency (e.g., $87.5K)
+        function formatCurrencyShort (amount) {
+            if (amount >= 1000) {
+                return '$' + (amount / 1000).toFixed(1) + 'K'
+            }
+            return '$' + amount
+        }
+
+        // ========================================
+        // DISPLAY RESULTS
+        // ========================================
+
+        // Side effect: updates the results UI
+        function displayResults (input, estimate, seasons) {
+            // Update hero section
+            document.getElementById('resultName').textContent = input.firstName + ' ' + input.lastName
+            document.getElementById('resultAmount').textContent = formatCurrency(estimate.annualRevenue)
+            document.getElementById('resultAddress').textContent = input.address || 'Your Property'
+
+            // Update metrics
+            document.getElementById('avgRate').textContent = formatCurrency(estimate.avgNightlyRate)
+            document.getElementById('occupancy').textContent = estimate.occupancyRate + '%'
+            document.getElementById('nightsBooked').textContent = estimate.nightsBooked
+
+            // Update comparable count
+            document.getElementById('comparableCount').textContent = estimate.comparableCount
+
+            // Update donut chart center
+            document.getElementById('donutTotal').textContent = formatCurrencyShort(estimate.annualRevenue)
+
+            // Update seasonal legend
+            document.getElementById('winterRevenue').textContent = formatCurrency(seasons.winter)
+            document.getElementById('springRevenue').textContent = formatCurrency(seasons.spring)
+            document.getElementById('summerRevenue').textContent = formatCurrency(seasons.summer)
+            document.getElementById('fallRevenue').textContent = formatCurrency(seasons.fall)
+
+            // Update compact estimate
+            document.getElementById('compactValue').textContent = formatCurrency(estimate.annualRevenue)
+
+            // Store base estimate for toggle adjustments
+            baseEstimate = estimate.annualRevenue
+
+            // Reset toggles based on what user already selected
+            hotTubActive = input.amenities.includes('hot_tub')
+            petActive = input.amenities.includes('pet_friendly')
+
+            // Update toggle UI if already selected
+            if (hotTubActive) {
+                document.getElementById('hotTubSwitch').classList.add('active')
+                document.getElementById('hotTubCard').classList.add('active')
+            }
+            if (petActive) {
+                document.getElementById('petSwitch').classList.add('active')
+                document.getElementById('petCard').classList.add('active')
+            }
+
+            // Apply boosts based on toggle state (updates the displayed value)
+            updateToggleEstimate()
+        }
+
+        // ========================================
+        // FORM COLLECTION
+        // ========================================
+
+        // Side effect: collects all form data
+        function collectFormData () {
+            formData.firstName = document.getElementById('firstName').value
+            formData.lastName = document.getElementById('lastName').value
+            formData.email = document.getElementById('email').value
+            formData.phone = document.getElementById('phone').value
+            formData.address = document.getElementById('locationSearch').value
+            formData.bedrooms = document.getElementById('bedrooms').value
+            formData.bathrooms = document.getElementById('bathrooms').value
+            formData.maxGuests = document.getElementById('maxGuests').value
+            formData.squareFootage = document.getElementById('squareFootage').value
+            formData.additionalInfo = document.getElementById('additionalInfo').value
+
+            // Get coordinates from selected address (for distance calculation)
+            if (selectedAddress && selectedAddress.coordinates) {
+                formData.latitude = selectedAddress.coordinates.lat
+                formData.longitude = selectedAddress.coordinates.lng
+            }
+
+            return formData
+        }
+
+        // ========================================
+        // SUBMIT AND CALCULATE
+        // ========================================
+
+        function submitEstimate () {
+            // Collect all form data
+            var input = collectFormData()
+
+            // Find comparables and calculate
+            var comparables = findComparables(input)
+            var estimate = calculateEstimate(comparables, input)
+            var seasons = calculateSeasonality(estimate.annualRevenue)
+
+            console.log('Input:', input)
+            console.log('Comparables found:', comparables.length)
+            console.log('Estimate:', estimate)
+
+            // Populate results UI
+            displayResults(input, estimate, seasons)
+
+            // Show results slide
+            showSlide(7)
+        }
+
+        // ========================================
+        // TOGGLE ADJUSTMENTS (Results Page)
+        // ========================================
+
+        function setupToggleListeners () {
+            var hotTubCard = document.getElementById('hotTubCard')
+            var petCard = document.getElementById('petCard')
+
+            hotTubCard.addEventListener('click', function () {
+                hotTubActive = !hotTubActive
+                document.getElementById('hotTubSwitch').classList.toggle('active')
+                hotTubCard.classList.toggle('active')
+                updateToggleEstimate()
+            })
+
+            petCard.addEventListener('click', function () {
+                petActive = !petActive
+                document.getElementById('petSwitch').classList.toggle('active')
+                petCard.classList.toggle('active')
+                updateToggleEstimate()
+            })
+        }
+
+        function updateToggleEstimate () {
+            var multiplier = 1
+
+            if (hotTubActive) {
+                multiplier *= (1 + hotTubBoost / 100)
+            }
+            if (petActive) {
+                multiplier *= (1 + petBoost / 100)
+            }
+
+            var newEstimate = Math.round(baseEstimate * multiplier)
+
+            // Update hero section
+            document.getElementById('resultAmount').textContent = formatCurrency(newEstimate)
+
+            // Update donut chart center
+            document.getElementById('donutTotal').textContent = formatCurrencyShort(newEstimate)
+
+            // Update seasonal breakdown
+            var seasons = calculateSeasonality(newEstimate)
+            document.getElementById('winterRevenue').textContent = formatCurrency(seasons.winter)
+            document.getElementById('springRevenue').textContent = formatCurrency(seasons.spring)
+            document.getElementById('summerRevenue').textContent = formatCurrency(seasons.summer)
+            document.getElementById('fallRevenue').textContent = formatCurrency(seasons.fall)
+
+            // Update derived metrics based on new estimate
+            var occupancyRate = 65
+            var nightsBooked = Math.round(365 * (occupancyRate / 100))
+            var avgNightlyRate = Math.round(newEstimate / nightsBooked)
+            document.getElementById('avgRate').textContent = formatCurrency(avgNightlyRate)
+
+            // Update toggle section
+            var compactEstimate = document.getElementById('compactEstimate')
+            var compactValue = document.getElementById('compactValue')
+            var compactNote = document.getElementById('compactNote')
+
+            if (multiplier > 1) {
+                compactEstimate.classList.add('updated')
+                compactValue.textContent = formatCurrency(newEstimate)
+                compactNote.style.display = 'block'
+            } else {
+                compactEstimate.classList.remove('updated')
+                compactValue.textContent = formatCurrency(baseEstimate)
+                compactNote.style.display = 'none'
+            }
+        }
+
+        // ========================================
+        // PROGRESS BAR & NAVIGATION
+        // ========================================
+
+        function initProgressSteps () {
+            var progressSteps = document.getElementById('progressSteps')
+            var steps = ['Contact', 'Type', 'Location', 'Details', 'Quality', 'Amenities']
+
+            steps.forEach(function (step, index) {
+                var stepDiv = document.createElement('div')
+                stepDiv.className = 'progress-step'
+                if (index === 0) stepDiv.classList.add('active')
+                stepDiv.innerHTML =
+                    '<div class="progress-step-number">' + (index + 1) + '</div>' +
+                    '<div>' + step + '</div>'
+                progressSteps.appendChild(stepDiv)
+            })
+        }
+
+        function updateProgress () {
+            var progressBarFill = document.getElementById('progressBarFill')
+            var progressSteps = document.querySelectorAll('.progress-step')
+
+            var progressSlide = Math.min(currentSlide, 6)
+            var progress = ((progressSlide - 1) / 5) * 100
+
+            progressBarFill.style.width = progress + '%'
+
+            progressSteps.forEach(function (step, index) {
+                step.classList.remove('active', 'completed')
+                if (index + 1 < progressSlide) {
+                    step.classList.add('completed')
+                } else if (index + 1 === progressSlide) {
+                    step.classList.add('active')
+                }
+            })
+        }
+
+        function showSlide (slideNumber) {
+            var slides = document.querySelectorAll('.slide')
+            slides.forEach(function (slide) {
+                slide.classList.remove('active')
+            })
+
+            var targetSlide = document.querySelector('[data-slide="' + slideNumber + '"]')
+            if (targetSlide) {
+                targetSlide.classList.add('active')
+            }
+
+            currentSlide = slideNumber
+            updateProgress()
+
+            // Hide progress bar on results slide
+            var progressContainer = document.querySelector('.progress-container')
+            if (slideNumber === 7) {
+                progressContainer.style.display = 'none'
+            } else {
+                progressContainer.style.display = 'block'
+            }
+
+            // Initialize map when location slide is first shown
+            if (slideNumber === 3 && !map) {
+                setTimeout(function () {
+                    initMap()
+                }, 100)
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' })
+        }
+
+        function nextSlide () {
+            if (currentSlide < totalSlides) {
+                showSlide(currentSlide + 1)
+            }
+        }
+
+        function prevSlide () {
+            if (currentSlide > 1) {
+                showSlide(currentSlide - 1)
+            }
+        }
+
+        // ========================================
+        // PROPERTY TYPE SELECTION
+        // ========================================
+
+        function selectPropertyType (element, type) {
+            document.querySelectorAll('.property-type-card').forEach(function (card) {
+                card.classList.remove('selected')
+            })
+            element.classList.add('selected')
+            formData.propertyType = type
+            document.getElementById('propertyTypeNext').disabled = false
+        }
+
+        // ========================================
+        // AMENITIES
+        // ========================================
+
+        function toggleAmenity (element, amenity) {
+            element.classList.toggle('selected')
+            var checkbox = element.querySelector('input[type="checkbox"]')
+            checkbox.checked = !checkbox.checked
+
+            var index = formData.amenities.indexOf(amenity)
+            if (index > -1) {
+                formData.amenities.splice(index, 1)
+            } else {
+                formData.amenities.push(amenity)
+            }
+        }
+
+        // ========================================
+        // MAP
+        // ========================================
+
+        function initMap () {
+            var breckenridgeCoords = [39.4817, -106.0384]
+            map = L.map('propertyMap').setView(breckenridgeCoords, 11)
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map)
+        }
+
+        function addPropertyMarker (lat, lng, address) {
+            if (propertyMarker) {
+                map.removeLayer(propertyMarker)
+            }
+
+            var greenIcon = L.divIcon({
+                className: 'custom-marker',
+                iconSize: [20, 20],
+                iconAnchor: [10, 10],
+                popupAnchor: [0, -10]
+            })
+
+            propertyMarker = L.marker([lat, lng], { icon: greenIcon }).addTo(map)
+            propertyMarker.bindPopup('<strong>Your Property</strong><br>' + address).openPopup()
+            map.setView([lat, lng], 14, { animate: true })
+        }
+
+        // ========================================
+        // ADDRESS AUTOCOMPLETE
+        // ========================================
+
+        function loadAddresses () {
+            fetch('./park-county-addresses.json')
+                .then(function (response) { return response.json() })
+                .then(function (data) {
+                    addresses = data
+                    initializeAutocomplete()
+                })
+                .catch(function (error) {
+                    console.error('Error loading addresses:', error)
+                })
+        }
+
+        function initializeAutocomplete () {
+            fuse = new Fuse(addresses, {
+                keys: [
+                    { name: 'address', weight: 2 },
+                    { name: 'street', weight: 1.5 },
+                    { name: 'number', weight: 1 },
+                    { name: 'city', weight: 1 }
+                ],
+                threshold: 0.4,
+                includeScore: true,
+                minMatchCharLength: 2,
+                distance: 100
+            })
+
+            document.addEventListener('click', function (e) {
+                if (!e.target.closest('.form-group')) {
+                    hideLocationSuggestions()
+                }
+            })
+        }
+
+        function handleLocationInput () {
+            if (isSelectingAddress) return
+
+            var input = document.getElementById('locationSearch')
+            var query = input.value.trim()
+
+            if (searchTimeout) clearTimeout(searchTimeout)
+
+            if (query.length < 2 || !fuse) {
+                hideLocationSuggestions()
+                return
+            }
+
+            if (query.length > 100) {
+                hideLocationSuggestions()
+                return
+            }
+
+            searchTimeout = setTimeout(function () {
+                var results = fuse.search(query, { limit: 10 })
+                displayLocationResults(results)
+            }, 150)
+        }
+
+        function displayLocationResults (results) {
+            var suggestionsDiv = document.getElementById('locationSuggestions')
+
+            if (results.length === 0) {
+                suggestionsDiv.innerHTML = '<div class="location-suggestion-item" style="text-align: center; color: #999; cursor: default;">No addresses found</div>'
+                suggestionsDiv.classList.add('active')
+                return
+            }
+
+            suggestionsDiv.innerHTML = ''
+            results.forEach(function (result) {
+                var addr = result.item
+                var item = document.createElement('div')
+                item.className = 'location-suggestion-item'
+                item.innerHTML = '<div style="font-weight: 700;">' + addr.number + ' ' + addr.street + '</div>' +
+                                '<div style="font-size: 14px; color: #666;">' + addr.city + ', CO ' + addr.postcode + '</div>'
+                item.onclick = function () {
+                    selectLocationAddress(addr)
+                }
+                suggestionsDiv.appendChild(item)
+            })
+
+            suggestionsDiv.classList.add('active')
+        }
+
+        function selectLocationAddress (address) {
+            isSelectingAddress = true
+
+            var input = document.getElementById('locationSearch')
+            input.value = address.number + ' ' + address.street + ', ' + address.city + ', CO ' + address.postcode
+            selectedAddress = address
+            hideLocationSuggestions()
+
+            if (address.coordinates && address.coordinates.lat && address.coordinates.lng) {
+                var displayAddress = address.number + ' ' + address.street + '<br>' + address.city + ', CO ' + address.postcode
+                addPropertyMarker(address.coordinates.lat, address.coordinates.lng, displayAddress)
+            }
+
+            setTimeout(function () {
+                isSelectingAddress = false
+            }, 100)
+        }
+
+        function hideLocationSuggestions () {
+            if (searchTimeout) {
+                clearTimeout(searchTimeout)
+                searchTimeout = null
+            }
+            document.getElementById('locationSuggestions').classList.remove('active')
+        }
+
+        // ========================================
+        // STAR RATING
+        // ========================================
+
+        var selectedStarRating = 0
+
+        function initStarRating () {
+            var container = document.getElementById('starRatingContainer')
+            container.innerHTML = ''
+
+            for (var i = 1; i <= 5; i++) {
+                var starWrapper = document.createElement('span')
+                starWrapper.className = 'star-wrapper'
+                starWrapper.innerHTML = '<span class="star" data-index="' + i + '">★</span>'
+
+                starWrapper.addEventListener('click', function (e) {
+                    var rect = e.currentTarget.getBoundingClientRect()
+                    var clickX = e.clientX - rect.left
+                    var starIndex = parseInt(e.currentTarget.querySelector('.star').dataset.index)
+                    var isLeftHalf = clickX < rect.width / 2
+
+                    var rating = isLeftHalf ? starIndex - 0.5 : starIndex
+                    setStarRating(rating)
+                })
+
+                container.appendChild(starWrapper)
+            }
+        }
+
+        function setStarRating (rating) {
+            selectedStarRating = rating
+            formData.qualityRating = rating
+
+            var stars = document.querySelectorAll('.star')
+            stars.forEach(function (star, index) {
+                var starIndex = index + 1
+                star.classList.remove('full', 'half')
+
+                if (starIndex <= Math.floor(rating)) {
+                    star.classList.add('full')
+                } else if (starIndex - 0.5 === rating) {
+                    star.classList.add('half')
+                }
+            })
+
+            var labels = [
+                'Poor', 'Poor+', 'Fair', 'Fair+', 'Good',
+                'Good+', 'Very Good', 'Very Good+', 'Excellent', 'Excellent+'
+            ]
+            var labelIndex = Math.round(rating * 2) - 1
+            document.getElementById('starRatingLabel').textContent = labels[labelIndex] + ' (' + rating + ' stars)'
+
+            document.getElementById('qualityNext').disabled = false
+        }
+
+        // ========================================
+        // PHOTO UPLOAD
+        // ========================================
+
+        var uploadedPhotos = []
+
+        function handlePhotoUpload () {
+            var files = document.getElementById('qualityPhotos').files
+            var previewList = document.getElementById('photoPreviewList')
+
+            for (var i = 0; i < files.length; i++) {
+                var file = files[i]
+                uploadedPhotos.push(file)
+
+                var reader = new FileReader()
+                reader.onload = (function (file, index) {
+                    return function (e) {
+                        var previewItem = document.createElement('div')
+                        previewItem.className = 'photo-preview-item'
+                        previewItem.innerHTML =
+                            '<img src="' + e.target.result + '" alt="Property photo">' +
+                            '<button class="photo-preview-remove" onclick="removePhoto(' + (uploadedPhotos.length - 1) + ')">×</button>'
+                        previewList.appendChild(previewItem)
+                    }
+                })(file, i)
+                reader.readAsDataURL(file)
+            }
+
+            formData.qualityPhotos = uploadedPhotos
+
+            if (uploadedPhotos.length >= 3) {
+                document.getElementById('qualityNext').disabled = false
+            }
+        }
+
+        function removePhoto (index) {
+            uploadedPhotos.splice(index, 1)
+            formData.qualityPhotos = uploadedPhotos
+
+            var previewList = document.getElementById('photoPreviewList')
+            previewList.innerHTML = ''
+
+            uploadedPhotos.forEach(function (file, i) {
+                var reader = new FileReader()
+                reader.onload = function (e) {
+                    var previewItem = document.createElement('div')
+                    previewItem.className = 'photo-preview-item'
+                    previewItem.innerHTML =
+                        '<img src="' + e.target.result + '" alt="Property photo">' +
+                        '<button class="photo-preview-remove" onclick="removePhoto(' + i + ')">×</button>'
+                    previewList.appendChild(previewItem)
+                }
+                reader.readAsDataURL(file)
+            })
+
+            if (uploadedPhotos.length < 3 && selectedStarRating === 0) {
+                document.getElementById('qualityNext').disabled = true
+            }
+        }
+
+        // ========================================
+        // PHONE FORMATTING
+        // ========================================
+
+        document.getElementById('phone').addEventListener('input', function (e) {
+            var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/)
+            e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '')
+        })
+
+        // ========================================
+        // INITIALIZATION
+        // ========================================
+
+        window.onload = function () {
+            initProgressSteps()
+            updateProgress()
+            initStarRating()
+            loadAddresses()
+            loadPropertiesData()
+            setupToggleListeners()
+        }
+    </script>
+
+    <!-- Fuse.js for address autocomplete -->
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0"></script>
+
+    <!-- Leaflet.js -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+</body>
+</html>
